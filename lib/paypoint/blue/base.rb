@@ -14,11 +14,12 @@ module PayPoint
       #   defaults to `ENV['BLUE_API_INSTALLATION']`
       # @param api_id your API user ID, defaults to `ENV['BLUE_API_ID']`
       # @param api_password your API user password, defaults to `ENV['BLUE_API_PASSWORD']`
-      # @param options the client may receive the following options
-      #   * `:log` [true/false] – whether to log requests and responses
-      #   * `:logger` [Logger] – a custom logger instance, implies `log: true`
-      #   * `:raw` [true/false] – whether to return the raw Faraday::Response object instead of a parsed value
-      #   * any other options are passed on to the Faraday client
+      #
+      # @option options [true,false] :log whether to log requests and responses
+      # @option options [Logger] :logger a custom logger instance, implies `log: true`
+      # @option options [true,false] :raw whether to return the raw Faraday::Response object instead of a parsed value
+      #
+      # other options are passed on to the Faraday client
       def initialize(endpoint:,
                      inst_id: ENV['BLUE_API_INSTALLATION'],
                      api_id: ENV['BLUE_API_ID'],
