@@ -1,8 +1,6 @@
-# Paypoint::Blue
+# PayPoint::Blue
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/paypoint/blue`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+API client for PayPoint's 3rd generation PSP product a.k.a PayPoint Blue.
 
 ## Installation
 
@@ -22,7 +20,20 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+``` ruby
+# endpoint can be the actual URL or one of :mite_api, :mite_hosted, :live_api, or :live_hosted
+# installation id and credentials default to these ENV vars if omitted
+blue = PayPoint::Blue.hosted_client(
+  endpoint: :test,
+  inst_id: ENV['BLUE_API_INSTALLATION'],
+  api_id: ENV['BLUE_API_ID'],
+  api_password: ENV['BLUE_API_PASSWORD']
+)
+
+blue.ping # => :ok
+
+blue.transaction(transaction_id) # => { processing: { ... }, paymentMethod: { ... }, ... }
+```
 
 ## Development
 
@@ -32,7 +43,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/paypoint-blue/fork )
+1. Fork it ( https://github.com/CPlus/paypoint-blue/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)

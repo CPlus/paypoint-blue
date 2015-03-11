@@ -1,7 +1,6 @@
 require "paypoint/blue/version"
 
-module Paypoint
+module PayPoint
   module Blue
-    # Your code goes here...
   end
 end
