@@ -1,0 +1,9 @@
+HTTP/1.1 201 Created
+Server: Apache-Coyote/1.1
+Set-Cookie: JSESSIONID=77d0e3c1-6e16-411d-9d63-aabdec1bc450; Path=/hosted; HttpOnly
+Set-Cookie: rememberMe=deleteMe; Path=/hosted; Max-Age=0; Expires=Sun, 11-Mar-2015 13:23:46 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Mon, 12 Mar 2015 13:23:45 GMT
+
+{"sessionId":"4e88554a-fb20-4527-a1c1-1a19ebf23c94","redirectUrl":"https://hosted.mite.paypoint.net/hosted/2455020b-928f-4515-88bb-b18f4283adfe/begin/4e88554a-fb20-4527-a1c1-1a19ebf23c94","status":"SUCCESS"}

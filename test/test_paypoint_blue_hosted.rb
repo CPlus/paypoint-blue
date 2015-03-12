@@ -12,7 +12,34 @@ class TestPayPointBlueHosted < Minitest::Test
   end
 
   def test_make_payment
-    payload = {
+    payload = payment_payload
+    stub_hosted_post('sessions/1234/payments').with(body: payload).to_return(fixture("make_payment.json"))
+    response = @blue.make_payment(**payload)
+    expected = {
+      "sessionId" => "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627",
+      "redirectUrl" => "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627",
+      "status" => "SUCCESS"
+    }
+    assert_equal expected, response
+  end
+
+  def test_submit_authorisation
+    payload = payment_payload
+    payload_with_deferred = payload.dup.merge! transaction: payload[:transaction].merge(deferred: true)
+    stub_hosted_post('sessions/1234/payments').with(body: payload_with_deferred).to_return(fixture("submit_authorisation.json"))
+    response = @blue.submit_authorisation(**payload)
+    expected = {
+      "sessionId" => "4e88554a-fb20-4527-a1c1-1a19ebf23c94",
+      "redirectUrl" => "https://hosted.mite.paypoint.net/hosted/2455020b-928f-4515-88bb-b18f4283adfe/begin/4e88554a-fb20-4527-a1c1-1a19ebf23c94",
+      "status" => "SUCCESS"
+    }
+    assert_equal expected, response
+  end
+
+  private
+
+  def payment_payload
+    {
       transaction: {
         merchantReference: "abcd-1234",
         money: { amount: { fixed: "4.89" }, currency: "GBP" }
@@ -27,13 +54,5 @@ class TestPayPointBlueHosted < Minitest::Test
       },
       locale: "en"
     }
-    stub_hosted_post('sessions/1234/payments').with(body: payload).to_return(fixture("make_payment.json"))
-    response = @blue.make_payment(**payload)
-    expected = {
-      "sessionId" => "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627",
-      "redirectUrl" => "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627",
-      "status" => "SUCCESS"
-    }
-    assert_equal expected, response
   end
 end
