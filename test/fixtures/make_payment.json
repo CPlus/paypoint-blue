@@ -1,9 +1,8 @@
 HTTP/1.1 201 Created
 Server: Apache-Coyote/1.1
-Set-Cookie: JSESSIONID=a0bbc889-81e1-4082-b62a-c77ae7faab43; Path=/hosted; HttpOnly
-Set-Cookie: rememberMe=deleteMe; Path=/hosted; Max-Age=0; Expires=Sat, 10-Mar-2015 22:16:50 GMT
+Set-Cookie: rememberMe=deleteMe; Path=/acceptor; Max-Age=0; Expires=Sun, 11-Mar-2015 14:47:42 GMT
 Content-Type: application/json;charset=UTF-8
 Transfer-Encoding: chunked
-Date: Sun, 11 Mar 2015 22:16:51 GMT
+Date: Mon, 12 Mar 2015 14:47:43 GMT
 
-{"sessionId":"39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627","redirectUrl":"https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627","status":"SUCCESS"}
+{"processing":{"authResponse":{"statusCode":"1","message":"Success","gatewayReference":"1239913125","gatewaySettlement":"2015-03-12","gatewayMessage":"Success","avsAddressCheck":"FULL_MATCH","cv2Check":"MATCHED","status":"AUTHORISED"},"route":"MCPE"},"paymentMethod":{"card":{"cardToken":"MT_AuY7lNJERzCp9mGRP0S1ZA","new":true,"cardType":"MC_DEBIT","cardUsageType":"DEBIT","cardScheme":"MASTERCARD","maskedPan":"990000******5159","expiryDate":"1215","issuer":"PAYPOINT_TEST_BANK","issuerCountry":"GBR","cardHolderName":"John Doe","cardNickname":"primary card"},"billingAddress":{},"paymentClass":"CARD"},"customer":{"id":"197138","merchantRef":"42"},"transaction":{"transactionId":"10044236139","merchantRef":"xyz-1234","status":"SUCCESS","type":"PAYMENT","amount":4.89,"currency":"GBP","transactionTime":"2015-03-12T14:47:42.768Z","receivedTime":"2015-03-12T14:47:42.768Z"},"fraudGuard":{"score":0},"outcome":{"status":"SUCCESS","reasonCode":"S100","reasonMessage":"Authorised"},"trace":"T283mzh6EUc1yo5JJdwmPzA","link":[{"rel":"transaction","href":"https://api.mite.paypoint.net:2443/acceptor/rest/transactions/5300014/10044236139"}]}

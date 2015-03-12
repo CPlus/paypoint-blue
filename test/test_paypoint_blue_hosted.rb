@@ -13,7 +13,7 @@ class TestPayPointBlueHosted < Minitest::Test
 
   def test_make_payment
     payload = payment_payload
-    stub_hosted_post('sessions/1234/payments').with(body: payload).to_return(fixture("make_payment.json"))
+    stub_hosted_post('sessions/1234/payments').with(body: payload).to_return(fixture("make_payment_hosted.json"))
     response = @blue.make_payment(**payload)
     expected = {
       "sessionId" => "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627",
@@ -26,7 +26,7 @@ class TestPayPointBlueHosted < Minitest::Test
   def test_submit_authorisation
     payload = payment_payload
     payload_with_deferred = payload.dup.merge! transaction: payload[:transaction].merge(deferred: true)
-    stub_hosted_post('sessions/1234/payments').with(body: payload_with_deferred).to_return(fixture("submit_authorisation.json"))
+    stub_hosted_post('sessions/1234/payments').with(body: payload_with_deferred).to_return(fixture("submit_authorisation_hosted.json"))
     response = @blue.submit_authorisation(**payload)
     expected = {
       "sessionId" => "4e88554a-fb20-4527-a1c1-1a19ebf23c94",
