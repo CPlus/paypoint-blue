@@ -34,6 +34,19 @@ class TestPayPointBlueAPI < Minitest::Test
     assert_equal 'TCrwo0E9yjBrgCynkFdNlgw', response['trace']
   end
 
+  def test_capture_authorisation
+    txn_id = '10044236140'
+    stub_api_post("transactions/1234/#{txn_id}/capture").with(body: {}).to_return(fixture("capture_authorisation.json"))
+    response = @blue.capture_authorisation(txn_id)
+    assert_equal 'AUTHORISED',  response['processing']['authResponse']['status']
+    assert_equal '10044236205', response['transaction']['transactionId']
+    assert_equal 'SUCCESS',     response['transaction']['status']
+    assert_equal 'CAPTURE',     response['transaction']['type']
+    assert_equal txn_id,        response['transaction']['relatedTransaction']['transactionId']
+    assert_equal 'xyz-1234',    response['transaction']['relatedTransaction']['merchantRef']
+    assert_equal 'T0ymXgfPCRpCDyAlJneHOLw', response['trace']
+  end
+
   private
 
   def payment_payload
