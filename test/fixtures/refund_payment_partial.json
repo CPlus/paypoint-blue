@@ -1,0 +1,8 @@
+HTTP/1.1 201 Created
+Server: Apache-Coyote/1.1
+Set-Cookie: rememberMe=deleteMe; Path=/acceptor; Max-Age=0; Expires=Mon, 15-Mar-2015 13:44:30 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Tue, 16 Mar 2015 13:44:31 GMT
+
+{"processing":{"authResponse":{"statusCode":"1","message":"Success","gatewayReference":"509004369","gatewaySettlement":"2015-03-16","gatewayMessage":"Success","status":"AUTHORISED"},"route":"MCPE"},"transaction":{"transactionId":"10044236217","status":"SUCCESS","type":"REFUND","amount":3.49,"currency":"GBP","transactionTime":"2015-03-16T13:44:30.573Z","receivedTime":"2015-03-16T13:44:30.573Z","relatedTransaction":{"transactionId":"10044236140","merchantRef":"xyz-1234"}},"outcome":{"status":"SUCCESS","reasonCode":"S100","reasonMessage":"Authorised"},"trace":"TaEG0_5DaqtJjdtmq_-fs5Q","link":[{"rel":"transaction","href":"https://api.mite.paypoint.net:2443/acceptor/rest/transactions/5300014/10044236217"},{"rel":"related-transaction","href":"https://api.mite.paypoint.net:2443/acceptor/rest/transactions/5300014/10044236140"}]}
