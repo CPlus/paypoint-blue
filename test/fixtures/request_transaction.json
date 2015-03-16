@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: rememberMe=deleteMe; Path=/acceptor; Max-Age=0; Expires=Mon, 15-Mar-2015 11:27:05 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Tue, 16 Mar 2015 11:27:05 GMT
+
+{"processing":{"authResponse":{"statusCode":"1","acquirerName":"Lloyds TSB Cardnet Domestic","message":"Success","gatewayReference":"1239913125","gatewaySettlement":"2015-03-12","gatewayMessage":"Success","avsAddressCheck":"FULL_MATCH","cv2Check":"MATCHED","status":"AUTHORISED"},"route":"MCPE"},"paymentMethod":{"card":{"cardToken":"MT_AuY7lNJERzCp9mGRP0S1ZA","new":true,"cardType":"MC_DEBIT","cardUsageType":"DEBIT","cardScheme":"MASTERCARD","maskedPan":"990000******5159","expiryDate":"1215","issuer":"PAYPOINT_TEST_BANK","issuerCountry":"GBR","cardNickname":"primary card"},"billingAddress":{},"paymentClass":"CARD"},"customer":{"merchantRef":"42","id":"197138","displayName":"John Doe","billingAddress":{}},"transaction":{"transactionId":"10044236139","merchantRef":"xyz-1234","status":"SUCCESS","type":"PAYMENT","amount":4.89,"currency":"GBP","transactionTime":"2015-03-12T20:47:42.768Z","receivedTime":"2015-03-12T20:47:42.768Z"},"history":[{"transactionStatus":"SUCCESS","reasonCode":"S100","reasonMessage":"Authorised","timeStamp":"2015-03-12T20:47:43.312Z"}],"fraudGuard":{"score":0},"followUpStatus":{},"link":[{"rel":"self","href":"https://api.mite.paypoint.net:2443/acceptor/rest/transactions/5300014/10044236139"},{"rel":"customer","href":"https://api.mite.paypoint.net:2443/acceptor/rest/customers/5300014/197138"},{"rel":"payment-method","href":"https://api.mite.paypoint.net:2443/acceptor/rest/customers/5300014/197138/paymentMethods/MT_AuY7lNJERzCp9mGRP0S1ZA"}]}

@@ -71,4 +71,15 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
     client.post "transactions/#{inst_id}/#{transaction_id}/cancel", payload
   end
 
+  # Get transaction details
+  #
+  # @see https://developer.paypoint.com/payments/docs/#payments/request_a_previous_transaction
+  #
+  # @param [String] transaction_id the id of the transaction
+  #
+  # @return [Hash] the API response
+  def transaction(transaction_id)
+    client.get "transactions/#{inst_id}/#{transaction_id}"
+  end
+
 end
