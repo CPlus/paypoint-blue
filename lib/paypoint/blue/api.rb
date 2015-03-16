@@ -59,4 +59,16 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
     client.post "transactions/#{inst_id}/#{transaction_id}/capture", payload
   end
 
+  # Cancel an authorisation
+  #
+  # @see https://developer.paypoint.com/payments/docs/#payments/cancel_an_authorisation
+  #
+  # @param [String] transaction_id transaction id of the previously
+  #   submitted authorisation
+  #
+  # @return [Hash] the API response
+  def cancel_authorisation(transaction_id, **payload)
+    client.post "transactions/#{inst_id}/#{transaction_id}/cancel", payload
+  end
+
 end
