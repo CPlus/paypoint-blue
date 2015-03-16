@@ -71,6 +71,18 @@ class TestPayPointBlueAPI < Minitest::Test
     assert_equal 'PAYMENT',     response['transaction']['type']
   end
 
+  def test_refund_payment
+    txn_id = '10044236139'
+    stub_api_post("transactions/1234/#{txn_id}/refund").with(body: {}).to_return(fixture("refund_payment.json"))
+    response = @blue.refund_payment(txn_id)
+    assert_equal 'AUTHORISED',  response['processing']['authResponse']['status']
+    assert_equal '10044236208', response['transaction']['transactionId']
+    assert_equal 'SUCCESS',     response['transaction']['status']
+    assert_equal 'REFUND',      response['transaction']['type']
+    assert_equal txn_id,        response['transaction']['relatedTransaction']['transactionId']
+    assert_equal 'xyz-1234',    response['transaction']['relatedTransaction']['merchantRef']
+  end
+
   private
 
   def payment_payload

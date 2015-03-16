@@ -82,4 +82,22 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
     client.get "transactions/#{inst_id}/#{transaction_id}"
   end
 
+  # Refund a payment
+  #
+  # @see https://developer.paypoint.com/payments/docs/#payments/refund_a_payment
+  #
+  # Without a payload this will refund the full amount. If you only want
+  # to refund a smaller amount, you will need to pass a transaction
+  # object.
+  #
+  # @example Partial refund
+  #   blue.refund_payment(txn_id, transaction: { amount: '3.49' })
+  #
+  # @param [String] transaction_id the id of the transaction
+  #
+  # @return [Hash] the API response
+  def refund_payment(transaction_id, **payload)
+    client.post "transactions/#{inst_id}/#{transaction_id}/refund", payload
+  end
+
 end
