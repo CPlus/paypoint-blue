@@ -1,3 +1,5 @@
+require "forwardable"
+
 require "paypoint/blue/base"
 
 class PayPoint::Blue::Hosted < PayPoint::Blue::Base
@@ -6,6 +8,19 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
     test: "https://hosted.mite.paypoint.net/hosted/rest",
     live: "https://hosted.paypoint.net/hosted/rest"
   }.freeze
+
+  extend Forwardable
+
+  def_delegators :@api_client,
+    :capture_authorisation,
+    :cancel_authorisation,
+    :transaction,
+    :refund_payment
+
+  def initialize(**options)
+    @api_client = PayPoint::Blue::API.new(**options)
+    super
+  end
 
   # Test connectivity.
   #

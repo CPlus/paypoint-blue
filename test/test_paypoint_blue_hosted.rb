@@ -5,6 +5,12 @@ class TestPayPointBlueHosted < Minitest::Test
     @blue = PayPoint::Blue.hosted_client(endpoint: :test, inst_id: '1234', api_id: 'ABC', api_password: 'secret')
   end
 
+  def test_delegates_api_methods_to_regular_client
+    PayPoint::Blue::API.instance_methods(false).each do |api_method|
+      assert_respond_to @blue, api_method
+    end
+  end
+
   def test_ping
     stub_hosted_get('sessions/ping').to_return(fixture("ping"))
     response = @blue.ping
