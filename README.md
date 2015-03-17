@@ -21,8 +21,8 @@ Or install it yourself as:
 ## Usage
 
 ``` ruby
-# endpoint can be the actual URL or one of :mite_api, :mite_hosted, :live_api, or :live_hosted
-# installation id and credentials default to these ENV vars if omitted
+# Endpoint can be the actual URL or one of :test or :live.
+# Installation id and credentials default to these ENV vars if omitted.
 blue = PayPoint::Blue.hosted_client(
   endpoint: :test,
   inst_id: ENV['BLUE_API_INSTALLATION'],
@@ -30,8 +30,25 @@ blue = PayPoint::Blue.hosted_client(
   api_password: ENV['BLUE_API_PASSWORD']
 )
 
-blue.ping # => :ok
+blue.ping # => true
 
+blue.make_payment(
+  transaction: {
+    merchantReference: "abcd-1234",
+    money: { amount: { fixed: "4.89" }, currency: "GBP" }
+  },
+  customer: {
+    identity: { merchantCustomerId: "42" },
+    details: { name: "John Doe" }
+  },
+  session: {
+    returnUrl: { url: "http://example.com/callback/abcd-1234" },
+    skin: "9001"
+  }
+) # => { sessionId: "39ac...", redirectUrl: "https://hosted.paypoint.net/...", ... }
+
+# The hosted product doesn't have this endpoint, but the client will delegate
+# this request to an API client for the regular API product behind the scenes.
 blue.transaction(transaction_id) # => { processing: { ... }, paymentMethod: { ... }, ... }
 ```
 
