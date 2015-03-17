@@ -2,6 +2,7 @@ require "faraday"
 require "faraday_middleware"
 
 require "paypoint/blue/body_extractor"
+require "paypoint/blue/raise_errors"
 
 module PayPoint
   module Blue
@@ -60,10 +61,10 @@ module PayPoint
           f.request :basic_auth, @api_id, @api_password
           f.request :json
 
+          f.use PayPoint::Blue::RaiseErrors
           f.response :dates
           f.response :json, content_type: /\bjson$/
           f.response :logger, options[:logger] if options[:logger] || options[:log]
-          f.response :raise_error
 
           f.adapter Faraday.default_adapter
         end
