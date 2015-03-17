@@ -99,6 +99,18 @@ class TestPayPointBlueAPI < Minitest::Test
     assert_equal 'TaEG0_5DaqtJjdtmq_-fs5Q', response['trace']
   end
 
+  def test_refund_failure
+    txn_id = '10044236140'
+    payload = { transaction: { amount: "4.89", currency: "GBP" } }
+    stub_api_post("transactions/1234/#{txn_id}/refund").with(body: payload).to_return(fixture("refund_payment_failure.json"))
+    error = assert_raises(PayPoint::Blue::ValidationError) do
+      @blue.refund_payment(txn_id, **payload)
+    end
+    assert_equal 'Amount exceeds amount refundable', error.message
+    assert_equal 'V402', error.code
+    assert_equal 'FAILED', error.response[:body]['transaction']['status']
+  end
+
   private
 
   def payment_payload

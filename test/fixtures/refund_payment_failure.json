@@ -1,0 +1,9 @@
+HTTP/1.1 400 Bad Request
+Server: Apache-Coyote/1.1
+Set-Cookie: rememberMe=deleteMe; Path=/acceptor; Max-Age=0; Expires=Mon, 16-Mar-2015 13:53:49 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Tue, 17 Mar 2015 13:53:49 GMT
+Connection: close
+
+{"transaction":{"status":"FAILED"},"outcome":{"status":"FAILED","reasonCode":"V402","reasonMessage":"Amount exceeds amount refundable"},"trace":"TZF-d-8lIyt6aSDvGjQ_6og","link":[]}
