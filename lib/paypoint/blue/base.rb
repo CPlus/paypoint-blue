@@ -3,6 +3,7 @@ require "faraday_middleware"
 
 require "paypoint/blue/body_extractor"
 require "paypoint/blue/raise_errors"
+require "paypoint/blue/faraday_runscope"
 
 module PayPoint
   module Blue
@@ -20,7 +21,10 @@ module PayPoint
       #
       # @option options [true,false] :log whether to log requests and responses
       # @option options [Logger] :logger a custom logger instance, implies `log: true`
-      # @option options [true,false] :raw whether to return the raw Faraday::Response object instead of a parsed value
+      # @option options [true,false] :raw whether to return the raw Faraday::Response
+      #   object instead of a parsed value
+      # @option options [String] :runscope when used, all traffic will pass through
+      #   the provided Runscope bucket, including notification callbacks
       #
       # other options are passed on to the Faraday client
       def initialize(endpoint:,
@@ -56,6 +60,14 @@ module PayPoint
             # Faraday::Response object. It should be placed here in the middle
             # of the stack so that it runs as the last one.
             f.use PayPoint::Blue::BodyExtractor
+          end
+
+          # This sends all API traffic through Runscope, including
+          # notifications. It needs to be inserted here before the JSON
+          # request middleware so that it is able to transform
+          # notification URLs too.
+          if options[:runscope]
+            f.use FaradayRunscope, options[:runscope], transform_paths: /\Acallbacks\.\w+\.url\Z/
           end
 
           f.request :basic_auth, @api_id, @api_password

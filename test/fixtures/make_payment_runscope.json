@@ -1,0 +1,13 @@
+HTTP/1.1 201 Created
+Date: Sun, 22 Mar 2015 15:16:14 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Server: Apache-Coyote/1.1
+Set-Cookie: rememberMe=deleteMe; Path=/acceptor; Max-Age=0; Expires=Sat, 21-Mar-2015 15:16:13 GMT;
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Methods: GET, PUT, POST, PATCH, DELETE, OPTIONS, HEAD
+Runscope-Message-Id: 47d0f8c6-6078-403d-805e-35ac27e214b7
+
+{"processing":{"authResponse":{"statusCode":"1","message":"Success","gatewayReference":"754125027","gatewaySettlement":"2015-03-22","gatewayMessage":"Success","avsAddressCheck":"FULL_MATCH","cv2Check":"MATCHED","status":"AUTHORISED"},"route":"MCPE"},"paymentMethod":{"card":{"cardToken":"MT_AuY7lNJERzCp9mGRP0S1ZA","new":false,"cardType":"MC_DEBIT","cardUsageType":"DEBIT","cardScheme":"MASTERCARD","maskedPan":"990000******5159","expiryDate":"1215","issuer":"PAYPOINT_TEST_BANK","issuerCountry":"GBR","cardHolderName":"John Doe","cardNickname":"primary card"},"billingAddress":{},"paymentClass":"CARD"},"customer":{"id":"197138","merchantRef":"42"},"transaction":{"transactionId":"10044237041","merchantRef":"xyz-1234","status":"SUCCESS","type":"PAYMENT","amount":4.89,"currency":"GBP","transactionTime":"2015-03-22T15:16:13.540Z","receivedTime":"2015-03-22T15:16:13.540Z"},"fraudGuard":{"score":0},"outcome":{"status":"SUCCESS","reasonCode":"S100","reasonMessage":"Authorised"},"trace":"TiHrFVn79yBWEHY1MDIOcNQ","link":[{"rel":"transaction","href":"https://api.mite.paypoint.net:2443/acceptor/rest/transactions/5300014/10044237041"}]}

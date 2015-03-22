@@ -1,0 +1,10 @@
+HTTP/1.1 200 OK
+Date: Sun, 22 Mar 2015 14:58:47 GMT
+Content-Length: 0
+Connection: keep-alive
+Server: Apache-Coyote/1.1
+Access-Control-Allow-Methods: GET, PUT, POST, PATCH, DELETE, OPTIONS, HEAD
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Runscope-Message-Id: 6336177d-d844-4022-8099-f3580ae6b86c
+
