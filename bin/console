@@ -3,12 +3,147 @@
 require "bundler/setup"
 require "paypoint/blue"
 
-# You can add fixtures and/or initialization code here to make experimenting
-# with your gem easier. You can also use a different console, if you like.
+def bold(text)
+  "\e[1m#{text}\e[0m"
+end
 
-# (If you use this, don't forget to add pry to your Gemfile!)
-# require "pry"
-# Pry.start
+def help
+  puts <<-EOS
+#{bold "API client helpers"}
+
+  #{bold "blue"}(**api_options)
+  #{bold "blue_hosted"}(**api_options)
+
+Create and memoize API clients with these two. Options are the same as for
+PayPoint::Blue::Base#initialize, but default endpoint to :test.
+
+Export BLUE_API_INSTALLATION, BLUE_API_ID, and BLUE_API_PASSWORD as environment
+variables, and you won't have to pass them to the helpers. See direnv.net for
+an easy way to do that.
+
+It's recommended to use either logging or the Runscope integration to keep track
+and inspect all the traffic. You may set the RUNSCOPE_BUCKET environment
+variable to have the integration be turned on by default. Otherwise you only
+have to provide the runscope option the first time you call one of the API
+client helpers:
+
+    blue(runscope: 'bucket-key')
+
+#{bold "Callback endpoints"}
+
+  #{bold "cb"}(id)
+
+This is most useful when using the Runscope integration. The available ids are:
+
+  :preauth_proceed, :preauth_cancel, :preauth_suspend, :preauth_suspend_replay,
+  :postauth_proceed, :postauth_cancel, :empty
+
+These will return mocky.io urls which return the proper response. Using the
+Runscope integration you will see the requests PayPoint makes to these endpoints
+in your bucket.
+
+  #{bold "callbacks"}()
+
+Returns the callbacks section of the payload with all callbacks set to proceed.
+
+#{bold "Credit/Debit cards helpers"}
+
+  #{bold "card"}(type: :mc, valid: true, threeDS: true)
+
+Returns a credit/debit card number for testing. Possible options:
+
+  type:    :mc_debit, :mc_credit, :visa_debit, :visa_credit
+  valid:   true, false
+  threeDS: true, false, :unknown
+  EOS
+end
+alias :h :help
+
+def blue(endpoint: :test, **options)
+  options[:runscope] = ENV['RUNSCOPE_BUCKET'] if ENV['RUNSCOPE_BUCKET']
+  $blue_api ||= PayPoint::Blue.api_client(endpoint: endpoint, **options)
+end
+
+def blue_hosted(endpoint: :test, **options)
+  options[:runscope] = ENV['RUNSCOPE_BUCKET'] if ENV['RUNSCOPE_BUCKET']
+  $blue_hosted ||= PayPoint::Blue.hosted_client(endpoint: endpoint, **options)
+end
+
+def cb(id)
+  {
+    preauth_proceed:        "http://www.mocky.io/v2/550f10df3645066a0a2a420e",
+    preauth_cancel:         "http://www.mocky.io/v2/550f10ec364506660a2a420f",
+    preauth_suspend:        "http://www.mocky.io/v2/550f10ff364506670a2a4210",
+    preauth_suspend_replay: "http://www.mocky.io/v2/550f110a364506690a2a4211",
+    postauth_proceed:       "http://www.mocky.io/v2/550f1159364506650a2a4212",
+    postauth_cancel:        "http://www.mocky.io/v2/550f11633645066c0a2a4213",
+    empty:                  "http://www.mocky.io/v2/550f11723645066c0a2a4214"
+  }[id]
+end
+
+def callbacks
+  {
+    callbacks: {
+      preAuthCallback: { url: cb(:preauth_proceed), format: "REST_JSON" },
+      postAuthCallback: { url: cb(:postauth_proceed), format: "REST_JSON" },
+      transactionNotification: { url: cb(:empty), format: "REST_JSON" },
+      expiryNotification: { url: cb(:empty), format: "REST_JSON" }
+    }
+  }
+end
+
+def card(type: :mc_debit, valid: true, threeDS: true)
+  {
+    mc_debit: {
+      true => {
+        true     => "9900000000005159",
+        false    => "9900000000000010",
+        :unknown => "9900000000010258"
+      },
+      false => {
+        true     => "9900000000005282",
+        false    => "9900000000000168",
+        :unknown => "9900000000010407"
+      }
+    },
+    mc_credit: {
+      true => {
+        true     => "9901000000005133",
+        false    => "9901000000000019",
+        :unknown => "9901000000010257"
+      },
+      false => {
+        true     => "9901000000005281",
+        false    => "9901000000000167",
+        :unknown => "9901000000010406"
+      }
+    },
+    visa_debit: {
+      true => {
+        true     => "9902000000005132",
+        false    => "9902000000000018",
+        :unknown => "9902000000010256"
+      },
+      false => {
+        true     => "9902000000005280",
+        false    => "9902000000000166",
+        :unknown => "9902000000010405"
+      }
+    },
+    visa_credit: {
+      true => {
+        true     => "9903000000005131",
+        false    => "9903000000000017",
+        :unknown => "9903000000010255"
+      },
+      false => {
+        true     => "9903000000005289",
+        false    => "9903000000000165",
+        :unknown => "9903000000010404"
+      }
+    }
+  }[type][valid][threeDS]
+end
 
 require "irb"
 IRB.start
