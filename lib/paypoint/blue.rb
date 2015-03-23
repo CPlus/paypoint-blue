@@ -1,6 +1,7 @@
 require "paypoint/blue/version"
 require "paypoint/blue/api"
 require "paypoint/blue/hosted"
+require "paypoint/blue/utils"
 
 module PayPoint
   module Blue
