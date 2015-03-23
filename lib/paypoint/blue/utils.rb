@@ -17,6 +17,19 @@ module PayPoint
         end
       end
 
+      def camelcase_and_symbolize_keys(hash)
+        case hash
+        when Hash
+          hash.each_with_object({}) do |(key, value), camelized|
+            camelized[camelcase(key)] = camelcase_and_symbolize_keys(value)
+          end
+        when Enumerable
+          hash.map {|v| camelcase_and_symbolize_keys(v)}
+        else
+          hash
+        end
+      end
+
       private
 
       def snakecase(original)
@@ -24,6 +37,12 @@ module PayPoint
         string.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
         string.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
         string.downcase!
+        string.to_sym
+      end
+
+      def camelcase(original)
+        string = original.is_a?(Symbol) ? original.to_s : original.dup
+        string.gsub!(/_([a-z\d]*)/) { $1.capitalize }
         string.to_sym
       end
 
