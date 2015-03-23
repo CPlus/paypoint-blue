@@ -80,7 +80,8 @@ module PayPoint
           # request middleware so that it is able to transform
           # notification URLs too.
           if options[:runscope]
-            f.use FaradayRunscope, options[:runscope], transform_paths: /\Acallbacks\.\w+\.url\Z/
+            f.use FaradayRunscope, options[:runscope],
+              transform_paths: /\A(callbacks|session)\.\w+(Callback|Notification)\.url\Z/
           end
 
           f.request :basic_auth, @api_id, @api_password
