@@ -1,6 +1,7 @@
 require "faraday"
 require "faraday_middleware"
 
+require "paypoint/blue/payload_builder"
 require "paypoint/blue/body_extractor"
 require "paypoint/blue/hash_key_converter"
 require "paypoint/blue/raise_errors"
@@ -9,6 +10,8 @@ require "paypoint/blue/faraday_runscope"
 module PayPoint
   module Blue
     class Base
+
+      extend PayloadBuilder
 
       attr_reader :client, :inst_id
 

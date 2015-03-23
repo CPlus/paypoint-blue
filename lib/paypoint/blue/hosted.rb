@@ -9,6 +9,19 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
     live: "https://hosted.paypoint.net/hosted/rest"
   }.freeze
 
+  shortcut :merchant_ref,  'transaction.merchant_reference'
+  shortcut :amount,        'transaction.money.amount.fixed'
+  shortcut :currency,      'transaction.money.currency'
+  shortcut :customer_ref,  'customer.identity.merchant_customer_id'
+  shortcut :customer_name, 'customer.details.name'
+  shortcut :return_url,    'session.return_url.url'
+  shortcut :restore_url,   'session.restore_url.url'
+  shortcut :skin,          'session.skin'
+
+  shortcut :pre_auth_callback,        'session.pre_auth_callback.url'
+  shortcut :post_auth_callback,       'session.post_auth_callback.url'
+  shortcut :transaction_notification, 'session.transaction_notification.url'
+
   extend Forwardable
 
   def_delegators :@api_client,
@@ -43,9 +56,8 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @param [Hash] session returnUrl, callbacks and skin
   #
   # @return [Hash] the API response
-  def make_payment(transaction:, customer:, session:, **options)
-    payload = options.merge transaction: transaction, customer: customer, session: session
-    client.post "sessions/#{inst_id}/payments", payload
+  def make_payment(**payload)
+    client.post "sessions/#{inst_id}/payments", self.class.build_payload(payload)
   end
 
   # Submit an authorisation
@@ -56,8 +68,8 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # transaction's `deferred` value set to `true`.
   #
   # @see #make_payment
-  def submit_authorisation(transaction:, customer:, session:, **options)
-    payload = options.merge transaction: transaction, customer: customer, session: session
+  def submit_authorisation(**payload)
+    payload[:transaction] ||= {}
     payload[:transaction][:deferred] = true
     make_payment(**payload)
   end

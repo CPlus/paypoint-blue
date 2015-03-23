@@ -29,6 +29,29 @@ class TestPayPointBlueHosted < Minitest::Test
     assert_equal "SUCCESS", response.status
   end
 
+  def test_payload_shortcuts
+    payload = payment_payload
+    payload[:session].merge! pre_auth_callback: { url: "http://example.com/callback" }
+    stub_hosted_post('sessions/1234/payments').
+      with(body: camelcase_and_symbolize_keys(payload)).
+      to_return(fixture("make_payment_hosted.json"))
+
+    response = @blue.make_payment(
+      merchant_ref: 'abcd-1234',
+      amount: '4.89',
+      currency: 'GBP',
+      customer_ref: '42',
+      customer_name: 'John Doe',
+      return_url: 'http://example.com/callback/abcd-1234',
+      skin: '9001',
+      locale: 'en',
+      pre_auth_callback: 'http://example.com/callback'
+    )
+    assert_equal "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.session_id
+    assert_equal "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.redirect_url
+    assert_equal "SUCCESS", response.status
+  end
+
   def test_submit_authorisation
     payload = payment_payload
     payload_with_deferred = payload.dup.merge! transaction: payload[:transaction].merge(deferred: true)

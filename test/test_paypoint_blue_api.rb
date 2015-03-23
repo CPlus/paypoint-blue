@@ -25,6 +25,36 @@ class TestPayPointBlueAPI < Minitest::Test
     assert_equal 'T283mzh6EUc1yo5JJdwmPzA', response.trace
   end
 
+  def test_payload_shortcuts
+    payload = payment_payload.merge callbacks: { pre_auth_callback: { url: "http://example.com/callback" } }
+    stub_api_post('transactions/1234/payment').
+      with(body: camelcase_and_symbolize_keys(payload)).
+      to_return(fixture("make_payment.json"))
+
+    response = @blue.make_payment(
+      merchant_ref: 'xyz-1234',
+      amount: '4.89',
+      currency: 'GBP',
+      customer_ref: '42',
+      customer_name: 'John Doe',
+      transaction: { commerce_type: 'ECOM' },
+      payment_method: {
+        card: {
+          pan: "9900000000005159",
+          expiry_date: "1215",
+          nickname: "primary card"
+        }
+      },
+      locale: 'en',
+      pre_auth_callback: 'http://example.com/callback'
+    )
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044236139', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'PAYMENT',     response.transaction.type
+    assert_equal 'T283mzh6EUc1yo5JJdwmPzA', response.trace
+  end
+
   def test_submit_authorisation
     payload = payment_payload
     payload_with_deferred = payload.dup.merge! transaction: payload[:transaction].merge(deferred: true)

@@ -7,6 +7,18 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
     live: "https://api.paypoint.net/acceptor/rest",
   }.freeze
 
+  shortcut :merchant_ref,  'transaction.merchant_ref'
+  shortcut :amount,        'transaction.amount'
+  shortcut :currency,      'transaction.currency'
+  shortcut :commerce_type, 'transaction.commerce_type'
+  shortcut :customer_ref,  'customer.merchant_ref'
+  shortcut :customer_name, 'customer.display_name'
+
+  shortcut :pre_auth_callback,        'callbacks.pre_auth_callback.url'
+  shortcut :post_auth_callback,       'callbacks.post_auth_callback.url'
+  shortcut :transaction_notification, 'callbacks.transaction_notification.url'
+  shortcut :expiry_notification,      'callbacks.expiry_notification.url'
+
   # Test connectivity.
   #
   # @return [true,false]
@@ -28,9 +40,8 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # @param [Hash] payment_method card details, billing address
   #
   # @return [Hash] the API response
-  def make_payment(transaction:, customer:, payment_method:, **options)
-    payload = options.merge transaction: transaction, customer: customer, payment_method: payment_method
-    client.post "transactions/#{inst_id}/payment", payload
+  def make_payment(**payload)
+    client.post "transactions/#{inst_id}/payment", self.class.build_payload(payload)
   end
 
   # Submit an authorisation
@@ -41,8 +52,8 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # transaction's `deferred` value set to `true`.
   #
   # @see #make_payment
-  def submit_authorisation(transaction:, customer:, payment_method:, **options)
-    payload = options.merge transaction: transaction, customer: customer, payment_method: payment_method
+  def submit_authorisation(**payload)
+    payload[:transaction] ||= {}
     payload[:transaction][:deferred] = true
     make_payment(**payload)
   end
@@ -56,7 +67,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return [Hash] the API response
   def capture_authorisation(transaction_id, **payload)
-    client.post "transactions/#{inst_id}/#{transaction_id}/capture", payload
+    client.post "transactions/#{inst_id}/#{transaction_id}/capture", self.class.build_payload(payload)
   end
 
   # Cancel an authorisation
@@ -68,7 +79,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return [Hash] the API response
   def cancel_authorisation(transaction_id, **payload)
-    client.post "transactions/#{inst_id}/#{transaction_id}/cancel", payload
+    client.post "transactions/#{inst_id}/#{transaction_id}/cancel", self.class.build_payload(payload)
   end
 
   # Get transaction details
@@ -97,7 +108,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return [Hash] the API response
   def refund_payment(transaction_id, **payload)
-    client.post "transactions/#{inst_id}/#{transaction_id}/refund", payload
+    client.post "transactions/#{inst_id}/#{transaction_id}/refund", self.class.build_payload(payload)
   end
 
 end
