@@ -58,13 +58,16 @@ module PayPoint
         Faraday.new(client_options) do |f|
           unless options[:raw]
             # This extracts the body and discards all other data from the
-            # Faraday::Response object. It should be placed here in the middle
-            # of the stack so that it runs as the last one.
+            # Faraday::Response object. It should be placed here before
+            # all response middlewares, so that it runs as the last one.
             f.use PayPoint::Blue::BodyExtractor
           end
 
           f.use PayPoint::Blue::RaiseErrors
-          f.use PayPoint::Blue::HashKeyConverter unless options[:raw]
+          unless options[:raw]
+            f.response :mashify
+            f.use PayPoint::Blue::HashKeyConverter
+          end
           f.response :dates
           f.response :json, content_type: /\bjson$/
           f.response :logger, options[:logger] if options[:logger] || options[:log]

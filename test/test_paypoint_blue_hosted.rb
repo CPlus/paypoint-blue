@@ -24,12 +24,9 @@ class TestPayPointBlueHosted < Minitest::Test
       to_return(fixture("make_payment_hosted.json"))
 
     response = @blue.make_payment(**payload)
-    expected = {
-      session_id: "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627",
-      redirect_url: "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627",
-      status: "SUCCESS"
-    }
-    assert_equal expected, response
+    assert_equal "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.session_id
+    assert_equal "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.redirect_url
+    assert_equal "SUCCESS", response.status
   end
 
   def test_submit_authorisation
@@ -40,12 +37,9 @@ class TestPayPointBlueHosted < Minitest::Test
       to_return(fixture("submit_authorisation_hosted.json"))
 
     response = @blue.submit_authorisation(**payload)
-    expected = {
-      session_id: "4e88554a-fb20-4527-a1c1-1a19ebf23c94",
-      redirect_url: "https://hosted.mite.paypoint.net/hosted/2455020b-928f-4515-88bb-b18f4283adfe/begin/4e88554a-fb20-4527-a1c1-1a19ebf23c94",
-      status: "SUCCESS"
-    }
-    assert_equal expected, response
+    assert_equal "4e88554a-fb20-4527-a1c1-1a19ebf23c94", response.session_id
+    assert_equal "https://hosted.mite.paypoint.net/hosted/2455020b-928f-4515-88bb-b18f4283adfe/begin/4e88554a-fb20-4527-a1c1-1a19ebf23c94", response.redirect_url
+    assert_equal "SUCCESS", response.status
   end
 
   private

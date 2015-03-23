@@ -21,11 +21,11 @@ class TestFaradayRunscope < Minitest::Test
       ).
       to_return(fixture("make_payment_runscope.json"))
     response = @blue.make_payment(**payment_payload)
-    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
-    assert_equal '10044237041', response[:transaction][:transaction_id]
-    assert_equal 'SUCCESS',     response[:transaction][:status]
-    assert_equal 'PAYMENT',     response[:transaction][:type]
-    assert_equal 'TiHrFVn79yBWEHY1MDIOcNQ', response[:trace]
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044237041', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'PAYMENT',     response.transaction.type
+    assert_equal 'TiHrFVn79yBWEHY1MDIOcNQ', response.trace
   end
 
   private

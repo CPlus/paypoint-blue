@@ -18,11 +18,11 @@ class TestPayPointBlueAPI < Minitest::Test
       to_return(fixture("make_payment.json"))
 
     response = @blue.make_payment(**payload)
-    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
-    assert_equal '10044236139', response[:transaction][:transaction_id]
-    assert_equal 'SUCCESS',     response[:transaction][:status]
-    assert_equal 'PAYMENT',     response[:transaction][:type]
-    assert_equal 'T283mzh6EUc1yo5JJdwmPzA', response[:trace]
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044236139', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'PAYMENT',     response.transaction.type
+    assert_equal 'T283mzh6EUc1yo5JJdwmPzA', response.trace
   end
 
   def test_submit_authorisation
@@ -33,11 +33,11 @@ class TestPayPointBlueAPI < Minitest::Test
       to_return(fixture("submit_authorisation.json"))
 
     response = @blue.submit_authorisation(**payload)
-    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
-    assert_equal '10044236140', response[:transaction][:transaction_id]
-    assert_equal 'SUCCESS',     response[:transaction][:status]
-    assert_equal 'PREAUTH',     response[:transaction][:type]
-    assert_equal 'TCrwo0E9yjBrgCynkFdNlgw', response[:trace]
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044236140', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'PREAUTH',     response.transaction.type
+    assert_equal 'TCrwo0E9yjBrgCynkFdNlgw', response.trace
   end
 
   def test_capture_authorisation
@@ -47,13 +47,13 @@ class TestPayPointBlueAPI < Minitest::Test
       to_return(fixture("capture_authorisation.json"))
 
     response = @blue.capture_authorisation(txn_id)
-    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
-    assert_equal '10044236205', response[:transaction][:transaction_id]
-    assert_equal 'SUCCESS',     response[:transaction][:status]
-    assert_equal 'CAPTURE',     response[:transaction][:type]
-    assert_equal txn_id,        response[:transaction][:related_transaction][:transaction_id]
-    assert_equal 'xyz-1234',    response[:transaction][:related_transaction][:merchant_ref]
-    assert_equal 'T0ymXgfPCRpCDyAlJneHOLw', response[:trace]
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044236205', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'CAPTURE',     response.transaction.type
+    assert_equal txn_id,        response.transaction.related_transaction.transaction_id
+    assert_equal 'xyz-1234',    response.transaction.related_transaction.merchant_ref
+    assert_equal 'T0ymXgfPCRpCDyAlJneHOLw', response.trace
   end
 
   def test_cancel_authorisation
@@ -63,13 +63,13 @@ class TestPayPointBlueAPI < Minitest::Test
       to_return(fixture("cancel_authorisation.json"))
 
     response = @blue.cancel_authorisation(txn_id)
-    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
-    assert_equal '10044236207', response[:transaction][:transaction_id]
-    assert_equal 'SUCCESS',     response[:transaction][:status]
-    assert_equal 'CANCEL',      response[:transaction][:type]
-    assert_equal txn_id,        response[:transaction][:related_transaction][:transaction_id]
-    assert_equal 'xyz-1234',    response[:transaction][:related_transaction][:merchant_ref]
-    assert_equal 'T1N6taCE5T7sLmGXfVOy6Zw', response[:trace]
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044236207', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'CANCEL',      response.transaction.type
+    assert_equal txn_id,        response.transaction.related_transaction.transaction_id
+    assert_equal 'xyz-1234',    response.transaction.related_transaction.merchant_ref
+    assert_equal 'T1N6taCE5T7sLmGXfVOy6Zw', response.trace
   end
 
   def test_get_transaction
@@ -78,11 +78,11 @@ class TestPayPointBlueAPI < Minitest::Test
       to_return(fixture("request_transaction.json"))
 
     response = @blue.transaction(txn_id)
-    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
-    assert_equal '10044236139', response[:transaction][:transaction_id]
-    assert_equal 'xyz-1234',    response[:transaction][:merchant_ref]
-    assert_equal 'SUCCESS',     response[:transaction][:status]
-    assert_equal 'PAYMENT',     response[:transaction][:type]
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044236139', response.transaction.transaction_id
+    assert_equal 'xyz-1234',    response.transaction.merchant_ref
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'PAYMENT',     response.transaction.type
   end
 
   def test_refund_payment
@@ -92,13 +92,13 @@ class TestPayPointBlueAPI < Minitest::Test
       to_return(fixture("refund_payment.json"))
 
     response = @blue.refund_payment(txn_id)
-    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
-    assert_equal '10044236208', response[:transaction][:transaction_id]
-    assert_equal 'SUCCESS',     response[:transaction][:status]
-    assert_equal 'REFUND',      response[:transaction][:type]
-    assert_equal txn_id,        response[:transaction][:related_transaction][:transaction_id]
-    assert_equal 'xyz-1234',    response[:transaction][:related_transaction][:merchant_ref]
-    assert_equal 'Tp5PlxA6TF_FvBpD7HhFrfA', response[:trace]
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044236208', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'REFUND',      response.transaction.type
+    assert_equal txn_id,        response.transaction.related_transaction.transaction_id
+    assert_equal 'xyz-1234',    response.transaction.related_transaction.merchant_ref
+    assert_equal 'Tp5PlxA6TF_FvBpD7HhFrfA', response.trace
   end
 
   def test_partial_refund
@@ -109,14 +109,14 @@ class TestPayPointBlueAPI < Minitest::Test
       to_return(fixture("refund_payment_partial.json"))
 
     response = @blue.refund_payment(txn_id, **payload)
-    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
-    assert_equal '10044236217', response[:transaction][:transaction_id]
-    assert_equal 'SUCCESS',     response[:transaction][:status]
-    assert_equal 'REFUND',      response[:transaction][:type]
-    assert_equal 3.49,          response[:transaction][:amount]
-    assert_equal txn_id,        response[:transaction][:related_transaction][:transaction_id]
-    assert_equal 'xyz-1234',    response[:transaction][:related_transaction][:merchant_ref]
-    assert_equal 'TaEG0_5DaqtJjdtmq_-fs5Q', response[:trace]
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044236217', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'REFUND',      response.transaction.type
+    assert_equal 3.49,          response.transaction.amount
+    assert_equal txn_id,        response.transaction.related_transaction.transaction_id
+    assert_equal 'xyz-1234',    response.transaction.related_transaction.merchant_ref
+    assert_equal 'TaEG0_5DaqtJjdtmq_-fs5Q', response.trace
   end
 
   def test_refund_failure
@@ -130,7 +130,7 @@ class TestPayPointBlueAPI < Minitest::Test
     end
     assert_equal 'Amount exceeds amount refundable', error.message
     assert_equal 'V402', error.code
-    assert_equal 'FAILED', error.response[:body][:transaction][:status]
+    assert_equal 'FAILED', error.response[:body].transaction.status
   end
 
   private
