@@ -4,6 +4,8 @@ require 'paypoint/blue'
 require 'minitest/autorun'
 require 'webmock/minitest'
 
+include PayPoint::Blue::Utils
+
 def api_endpoint
   "https://ABC:secret@api.mite.paypoint.net:2443/acceptor/rest/"
 end

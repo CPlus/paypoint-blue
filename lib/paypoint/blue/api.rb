@@ -25,11 +25,11 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @param [Hash] transaction details of the transaction you want to create
   # @param [Hash] customer identity and details about the customer
-  # @param [Hash] paymentMethod card details, billing address
+  # @param [Hash] payment_method card details, billing address
   #
   # @return [Hash] the API response
-  def make_payment(transaction:, customer:, paymentMethod:, **options)
-    payload = options.merge transaction: transaction, customer: customer, paymentMethod: paymentMethod
+  def make_payment(transaction:, customer:, payment_method:, **options)
+    payload = options.merge transaction: transaction, customer: customer, payment_method: payment_method
     client.post "transactions/#{inst_id}/payment", payload
   end
 
@@ -41,8 +41,8 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # transaction's `deferred` value set to `true`.
   #
   # @see #make_payment
-  def submit_authorisation(transaction:, customer:, paymentMethod:, **options)
-    payload = options.merge transaction: transaction, customer: customer, paymentMethod: paymentMethod
+  def submit_authorisation(transaction:, customer:, payment_method:, **options)
+    payload = options.merge transaction: transaction, customer: customer, payment_method: payment_method
     payload[:transaction][:deferred] = true
     make_payment(**payload)
   end

@@ -17,15 +17,15 @@ class TestFaradayRunscope < Minitest::Test
     stub_request(:post, "https://ABC:secret@api-mite-paypoint-net-bucket.runscope.net/acceptor/rest/transactions/123/payment").
       with(
         headers: { 'Runscope-Request-Port' => '2443' },
-        body: payment_payload(callback_url: "http://example-com-bucket.runscope.net/callback/preauth")
+        body: camelcase_and_symbolize_keys(payment_payload(callback_url: "http://example-com-bucket.runscope.net/callback/preauth"))
       ).
       to_return(fixture("make_payment_runscope.json"))
     response = @blue.make_payment(**payment_payload)
-    assert_equal 'AUTHORISED',  response['processing']['authResponse']['status']
-    assert_equal '10044237041', response['transaction']['transactionId']
-    assert_equal 'SUCCESS',     response['transaction']['status']
-    assert_equal 'PAYMENT',     response['transaction']['type']
-    assert_equal 'TiHrFVn79yBWEHY1MDIOcNQ', response['trace']
+    assert_equal 'AUTHORISED',  response[:processing][:auth_response][:status]
+    assert_equal '10044237041', response[:transaction][:transaction_id]
+    assert_equal 'SUCCESS',     response[:transaction][:status]
+    assert_equal 'PAYMENT',     response[:transaction][:type]
+    assert_equal 'TiHrFVn79yBWEHY1MDIOcNQ', response[:trace]
   end
 
   private
@@ -33,24 +33,24 @@ class TestFaradayRunscope < Minitest::Test
   def payment_payload(callback_url: "http://example.com/callback/preauth")
     {
       transaction: {
-        merchantRef: "xyz-1234",
+        merchant_ref: "xyz-1234",
         amount: "4.89",
         currency: "GBP",
-        commerceType: "ECOM"
+        commerce_type: "ECOM"
       },
       customer: {
-        merchantRef: "42",
-        displayName: "John Doe"
+        merchant_ref: "42",
+        display_name: "John Doe"
       },
-      paymentMethod: {
+      payment_method: {
         card: {
           pan: "9900000000005159",
-          expiryDate: "1215",
+          expiry_date: "1215",
           nickname: "primary card"
         }
       },
       callbacks: {
-        preAuthCallback: {
+        pre_auth_callback: {
           format: "REST_JSON",
           url: callback_url
         }

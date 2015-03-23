@@ -2,6 +2,7 @@ require "faraday"
 require "faraday_middleware"
 
 require "paypoint/blue/body_extractor"
+require "paypoint/blue/hash_key_converter"
 require "paypoint/blue/raise_errors"
 require "paypoint/blue/faraday_runscope"
 
@@ -62,6 +63,12 @@ module PayPoint
             f.use PayPoint::Blue::BodyExtractor
           end
 
+          f.use PayPoint::Blue::RaiseErrors
+          f.use PayPoint::Blue::HashKeyConverter unless options[:raw]
+          f.response :dates
+          f.response :json, content_type: /\bjson$/
+          f.response :logger, options[:logger] if options[:logger] || options[:log]
+
           # This sends all API traffic through Runscope, including
           # notifications. It needs to be inserted here before the JSON
           # request middleware so that it is able to transform
@@ -72,11 +79,6 @@ module PayPoint
 
           f.request :basic_auth, @api_id, @api_password
           f.request :json
-
-          f.use PayPoint::Blue::RaiseErrors
-          f.response :dates
-          f.response :json, content_type: /\bjson$/
-          f.response :logger, options[:logger] if options[:logger] || options[:log]
 
           f.adapter Faraday.default_adapter
         end

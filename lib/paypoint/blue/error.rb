@@ -8,8 +8,8 @@ module PayPoint
         @response = response
 
         if outcome
-          @code   = outcome['reasonCode']
-          message = outcome['reasonMessage']
+          @code   = outcome[:reason_code]
+          message = outcome[:reason_message]
         else
           message = "the server responded with status #{response[:status]}"
         end
@@ -20,7 +20,7 @@ module PayPoint
       private
 
       def outcome
-        @outcome ||= response[:body].is_a?(Hash) && response[:body]['outcome']
+        @outcome ||= response[:body].is_a?(Hash) && response[:body][:outcome]
       end
     end
 

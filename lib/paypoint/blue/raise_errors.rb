@@ -7,7 +7,7 @@ module PayPoint
       def on_complete(env)
         outcome = fetch_outcome(env)
         if outcome
-          case outcome['reasonCode']
+          case outcome[:reason_code]
           when /^S/ then return
           when /^V/ then raise ValidationError, response_values(env)
           when /^A/ then raise AuthError,       response_values(env)
@@ -25,7 +25,7 @@ module PayPoint
       private
 
       def fetch_outcome(env)
-        env.body.is_a?(Hash) && env.body['outcome']
+        env.body.is_a?(Hash) && env.body[:outcome]
       end
 
       def response_values(env)
