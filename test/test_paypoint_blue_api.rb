@@ -158,7 +158,7 @@ class TestPayPointBlueAPI < Minitest::Test
       with(body: refund_request_payload(amount)).
       to_return(fixture("refund_payment_failure.json"))
 
-    error = assert_raises(PayPoint::Blue::ValidationError) do
+    error = assert_raises(PayPoint::Blue::Error::Validation) do
       @blue.refund_payment(txn_id, amount: amount)
     end
     assert_equal 'Amount exceeds amount refundable', error.message
