@@ -60,8 +60,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
     payload = build_payload(payload,
       defaults: %i[
         currency return_url restore_url skin
-        pre_auth_callback post_auth_callback
-        transaction_notification expiry_notification
+        pre_auth_callback post_auth_callback transaction_notification
       ]
     )
     client.post "sessions/#{inst_id}/payments", build_payload(payload)
