@@ -17,25 +17,22 @@ module PayPoint
             shortcuts[key] = path
           end
         end
-
-        def build_payload(payload)
-          payload.keys.each do |key|
-            if path = shortcut(key)
-              segments = path.split('.').map(&:to_sym)
-              leaf = segments.pop
-              leaf_parent = segments.reduce(payload) {|h,k| h[k] ||= {}}
-              leaf_parent[leaf] ||= payload.delete(key)
-            end
-          end
-          payload
-        end
       end
 
       attr_accessor :defaults
 
       def build_payload(payload, defaults: [])
         apply_defaults(payload, defaults)
-        self.class.build_payload(payload)
+        payload.keys.each do |key|
+          if path = self.class.shortcut(key)
+            value = payload.delete(key)
+            segments = path.split('.').map(&:to_sym)
+            leaf = segments.pop
+            leaf_parent = segments.reduce(payload) {|h,k| h[k] ||= {}}
+            leaf_parent[leaf] ||= value
+          end
+        end
+        payload
       end
 
       private
