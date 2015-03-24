@@ -2,7 +2,15 @@ require 'minitest_helper'
 
 class TestPayPointBlueHosted < Minitest::Test
   def setup
-    @blue = PayPoint::Blue.hosted_client(endpoint: :test, inst_id: '1234', api_id: 'ABC', api_password: 'secret')
+    @blue = PayPoint::Blue.hosted_client(
+      endpoint: :test, inst_id: '1234', api_id: 'ABC', api_password: 'secret',
+      defaults: {
+        currency: 'GBP',
+        skin: '9001',
+        return_url: 'http://example.com/callback/return',
+        pre_auth_callback: 'http://example.com/callback/preauth'
+      }
+    )
   end
 
   def test_delegates_api_methods_to_regular_client
@@ -18,34 +26,27 @@ class TestPayPointBlueHosted < Minitest::Test
   end
 
   def test_make_payment
-    payload = payment_payload
     stub_hosted_post('sessions/1234/payments').
-      with(body: camelcase_and_symbolize_keys(payload)).
+      with(body: request_payload).
       to_return(fixture("make_payment_hosted.json"))
 
-    response = @blue.make_payment(**payload)
+    response = @blue.make_payment(**payment_payload)
     assert_equal "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.session_id
     assert_equal "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.redirect_url
     assert_equal "SUCCESS", response.status
   end
 
   def test_payload_shortcuts
-    payload = payment_payload
-    payload[:session].merge! pre_auth_callback: { url: "http://example.com/callback" }
     stub_hosted_post('sessions/1234/payments').
-      with(body: camelcase_and_symbolize_keys(payload)).
+      with(body: request_payload).
       to_return(fixture("make_payment_hosted.json"))
 
     response = @blue.make_payment(
       merchant_ref: 'abcd-1234',
       amount: '4.89',
-      currency: 'GBP',
       customer_ref: '42',
       customer_name: 'John Doe',
-      return_url: 'http://example.com/callback/abcd-1234',
-      skin: '9001',
-      locale: 'en',
-      pre_auth_callback: 'http://example.com/callback'
+      locale: 'en'
     )
     assert_equal "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.session_id
     assert_equal "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.redirect_url
@@ -53,13 +54,13 @@ class TestPayPointBlueHosted < Minitest::Test
   end
 
   def test_submit_authorisation
-    payload = payment_payload
-    payload_with_deferred = payload.dup.merge! transaction: payload[:transaction].merge(deferred: true)
+    payload_with_deferred = request_payload
+    payload_with_deferred[:transaction][:deferred] = true
     stub_hosted_post('sessions/1234/payments').
-      with(body: camelcase_and_symbolize_keys(payload_with_deferred)).
+      with(body: payload_with_deferred).
       to_return(fixture("submit_authorisation_hosted.json"))
 
-    response = @blue.submit_authorisation(**payload)
+    response = @blue.submit_authorisation(**payment_payload)
     assert_equal "4e88554a-fb20-4527-a1c1-1a19ebf23c94", response.session_id
     assert_equal "https://hosted.mite.paypoint.net/hosted/2455020b-928f-4515-88bb-b18f4283adfe/begin/4e88554a-fb20-4527-a1c1-1a19ebf23c94", response.redirect_url
     assert_equal "SUCCESS", response.status
@@ -71,17 +72,28 @@ class TestPayPointBlueHosted < Minitest::Test
     {
       transaction: {
         merchant_reference: "abcd-1234",
-        money: { amount: { fixed: "4.89" }, currency: "GBP" }
+        money: { amount: { fixed: "4.89" } }
       },
       customer: {
         identity: { merchant_customer_id: "42" },
         details: { name: "John Doe" }
       },
-      session: {
-        return_url: { url: "http://example.com/callback/abcd-1234" },
-        skin: "9001"
-      },
       locale: "en"
     }
   end
+
+  def request_payload
+    with_defaults = payment_payload.dup.tap do |hash|
+      hash[:transaction] = hash[:transaction].dup.tap do |txn_hash|
+        txn_hash[:money] = txn_hash[:money].merge currency: 'GBP'
+      end
+      hash[:session] = {
+        return_url: { url: "http://example.com/callback/return" },
+        pre_auth_callback: { url: "http://example.com/callback/preauth" },
+        skin: "9001"
+      }
+    end
+    camelcase_and_symbolize_keys(with_defaults)
+  end
+
 end

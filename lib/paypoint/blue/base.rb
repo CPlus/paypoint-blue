@@ -11,7 +11,7 @@ module PayPoint
   module Blue
     class Base
 
-      extend PayloadBuilder
+      include PayloadBuilder
 
       attr_reader :client, :inst_id
 
@@ -45,6 +45,8 @@ module PayPoint
 
         options[:url] = @endpoint
         @options = options
+
+        self.defaults = options.delete(:defaults)
 
         @client = build_client
       end

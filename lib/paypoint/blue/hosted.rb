@@ -57,7 +57,14 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   #
   # @return [Hash] the API response
   def make_payment(**payload)
-    client.post "sessions/#{inst_id}/payments", self.class.build_payload(payload)
+    payload = build_payload(payload,
+      defaults: %i[
+        currency return_url restore_url skin
+        pre_auth_callback post_auth_callback
+        transaction_notification expiry_notification
+      ]
+    )
+    client.post "sessions/#{inst_id}/payments", build_payload(payload)
   end
 
   # Submit an authorisation

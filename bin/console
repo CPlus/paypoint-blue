@@ -59,13 +59,31 @@ Returns a credit/debit card number for testing. Possible options:
 end
 alias :h :help
 
+def blue_default_options
+  return_base = ENV['RUNSCOPE_BUCKET'] ? "https://#{RUNSCOPE_BUCKET}.runscope.net" : "http://bluedemo.dev"
+  {
+    runscope: ENV['RUNSCOPE_BUCKET'],
+    defaults: {
+      currency: 'GBP',
+      commerce_type: 'ECOM',
+      skin: ENV['BLUE_SKIN'],
+      return_url: "#{return_base}/callback/return",
+      restore_url: "#{return_base}/callback/restore",
+      pre_auth_callback: cb(:preauth_proceed),
+      post_auth_callback: cb(:postauth_proceed),
+      transaction_notification: cb(:empty),
+      expiry_notification: cb(:empty)
+    }
+  }
+end
+
 def blue(endpoint: :test, **options)
-  options[:runscope] = ENV['RUNSCOPE_BUCKET'] if ENV['RUNSCOPE_BUCKET']
+  options = blue_default_options.merge(options)
   $blue_api ||= PayPoint::Blue.api_client(endpoint: endpoint, **options)
 end
 
 def blue_hosted(endpoint: :test, **options)
-  options[:runscope] = ENV['RUNSCOPE_BUCKET'] if ENV['RUNSCOPE_BUCKET']
+  options = blue_default_options.merge(options)
   $blue_hosted ||= PayPoint::Blue.hosted_client(endpoint: endpoint, **options)
 end
 

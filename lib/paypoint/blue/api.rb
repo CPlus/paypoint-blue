@@ -41,7 +41,13 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return [Hash] the API response
   def make_payment(**payload)
-    client.post "transactions/#{inst_id}/payment", self.class.build_payload(payload)
+    payload = build_payload(payload,
+      defaults: %i[
+        currency commerce_type pre_auth_callback post_auth_callback
+        transaction_notification expiry_notification
+      ]
+    )
+    client.post "transactions/#{inst_id}/payment", payload
   end
 
   # Submit an authorisation
@@ -67,7 +73,8 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return [Hash] the API response
   def capture_authorisation(transaction_id, **payload)
-    client.post "transactions/#{inst_id}/#{transaction_id}/capture", self.class.build_payload(payload)
+    payload = build_payload(payload, defaults: %i[commerce_type])
+    client.post "transactions/#{inst_id}/#{transaction_id}/capture", payload
   end
 
   # Cancel an authorisation
@@ -79,7 +86,8 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return [Hash] the API response
   def cancel_authorisation(transaction_id, **payload)
-    client.post "transactions/#{inst_id}/#{transaction_id}/cancel", self.class.build_payload(payload)
+    payload = build_payload(payload, defaults: %i[commerce_type])
+    client.post "transactions/#{inst_id}/#{transaction_id}/cancel", payload
   end
 
   # Get transaction details
@@ -108,7 +116,9 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return [Hash] the API response
   def refund_payment(transaction_id, **payload)
-    client.post "transactions/#{inst_id}/#{transaction_id}/refund", self.class.build_payload(payload)
+    defaults = payload[:amount] || payload[:transaction] && payload[:transaction][:amount] ? %i[currency commerce_type] : []
+    payload = build_payload(payload, defaults: defaults)
+    client.post "transactions/#{inst_id}/#{transaction_id}/refund", payload
   end
 
 end
