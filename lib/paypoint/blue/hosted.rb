@@ -2,6 +2,7 @@ require "forwardable"
 
 require "paypoint/blue/base"
 
+# Client class for the Hosted product.
 class PayPoint::Blue::Hosted < PayPoint::Blue::Base
 
   ENDPOINTS = {
@@ -30,12 +31,16 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
     :transaction,
     :refund_payment
 
+  # The Hosted product has only a few endpoints. However, users most
+  # likey will want to access the endpoints of the API product as well.
+  # Therefore, this class also delegates to an API client which is
+  # initialized using the same options that this object receives.
   def initialize(**options)
     @api_client = PayPoint::Blue::API.new(**options)
     super
   end
 
-  # Test connectivity.
+  # Test connectivity
   #
   # @return [true,false]
   def ping
@@ -47,15 +52,16 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
 
   # Make a payment
   #
-  # @see https://developer.paypoint.com/payments/docs/#payments/make_a_payment
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/make_a_payment
   #
-  # All arguments will be merged into the final payload.
+  # @applies_defaults
+  #   +:currency+, +:return_url+, +:restore_url+, +:skin+,
+  #   +:pre_auth_callback+, +:post_auth_callback+, +:transaction_notification+
   #
-  # @param [Hash] transaction details of the transaction you want to create
-  # @param [Hash] customer identity and details about the customer
-  # @param [Hash] session returnUrl, callbacks and skin
+  # @param [Hash] payload the payload is made up of the keyword
+  #   arguments passed to the method
   #
-  # @return [Hash] the API response
+  # @return the API response
   def make_payment(**payload)
     payload = build_payload(payload,
       defaults: %i[
@@ -68,12 +74,15 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
 
   # Submit an authorisation
   #
-  # @see https://developer.paypoint.com/payments/docs/#payments/submit_an_authorisation
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/submit_an_authorisation
+  # @see #make_payment
   #
   # This is a convenience method which makes a payment with the
-  # transaction's `deferred` value set to `true`.
+  # transaction's +deferred+ value set to +true+.
   #
-  # @see #make_payment
+  # @param (see #make_payment)
+  #
+  # @return the API response
   def submit_authorisation(**payload)
     payload[:transaction] ||= {}
     payload[:transaction][:deferred] = true

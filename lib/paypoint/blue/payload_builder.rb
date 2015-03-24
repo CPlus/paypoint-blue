@@ -1,5 +1,9 @@
 module PayPoint
   module Blue
+
+    # Provides helper methods for payload construction used throughout
+    # the API. It allows definition of payload shortcuts and default
+    # values.
     module PayloadBuilder
 
       def self.included(base)
@@ -9,6 +13,20 @@ module PayPoint
       module ClassMethods
         attr_accessor :shortcuts
 
+        # Define a payload shortcut
+        #
+        # Shortcuts help payload construction by defining short aliases
+        # to commonly used paths.
+        #
+        # @example Define and use a shortcut
+        #   PayPoint::Blue::Hosted.shortcut :amount, 'transaction.money.amount.fixed'
+        #   blue.make_payment(amount: '3.49', ...)
+        #     # this will be turned into
+        #     # { transaction: { money: { amount: { fixed: '3.49' } } } }
+        #
+        # @param [Symbol] key the shortcut key
+        # @param [String] path a path into the payload with segments
+        #   separated by dots (e.g. +'transaction.money.amount.fixed'+)
         def shortcut(key, path=nil)
           if path.nil?
             shortcuts && shortcuts[key]
@@ -21,6 +39,12 @@ module PayPoint
 
       attr_accessor :defaults
 
+      # Builds the payload by applying default values and replacing
+      # shortcuts
+      #
+      # @param [Hash] payload the original payload using shortcuts
+      # @param [Array<Symbol>] defaults an array of symbols for defaults
+      #   that should be applied to this payload
       def build_payload(payload, defaults: [])
         apply_defaults(payload, defaults)
         payload.keys.each do |key|
@@ -48,5 +72,6 @@ module PayPoint
       end
 
     end
+
   end
 end

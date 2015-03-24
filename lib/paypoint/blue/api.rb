@@ -1,5 +1,6 @@
 require "paypoint/blue/base"
 
+# Client class for the API product.
 class PayPoint::Blue::API < PayPoint::Blue::Base
 
   ENDPOINTS = {
@@ -19,7 +20,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   shortcut :transaction_notification, 'callbacks.transaction_notification.url'
   shortcut :expiry_notification,      'callbacks.expiry_notification.url'
 
-  # Test connectivity.
+  # Test connectivity
   #
   # @return [true,false]
   def ping
@@ -31,15 +32,17 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
 
   # Make a payment
   #
-  # @see https://developer.paypoint.com/payments/docs/#payments/make_a_payment
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/make_a_payment
   #
-  # All arguments will be merged into the final payload.
+  # @applies_defaults
+  #   +:currency+, +:commerce_type+, +:pre_auth_callback+,
+  #   +:post_auth_callback+, +:transaction_notification+,
+  #   +:expiry_notification+
   #
-  # @param [Hash] transaction details of the transaction you want to create
-  # @param [Hash] customer identity and details about the customer
-  # @param [Hash] payment_method card details, billing address
+  # @param [Hash] payload the payload is made up of the keyword
+  #   arguments passed to the method
   #
-  # @return [Hash] the API response
+  # @return the API response
   def make_payment(**payload)
     payload = build_payload(payload,
       defaults: %i[
@@ -52,12 +55,15 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
 
   # Submit an authorisation
   #
-  # @see https://developer.paypoint.com/payments/docs/#payments/submit_an_authorisation
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/submit_an_authorisation
+  # @see #make_payment
   #
   # This is a convenience method which makes a payment with the
-  # transaction's `deferred` value set to `true`.
+  # transaction's +deferred+ value set to +true+.
   #
-  # @see #make_payment
+  # @param (see #make_payment)
+  #
+  # @return the API response
   def submit_authorisation(**payload)
     payload[:transaction] ||= {}
     payload[:transaction][:deferred] = true
@@ -66,12 +72,15 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
 
   # Capture an authorisation
   #
-  # @see https://developer.paypoint.com/payments/docs/#payments/capture_an_authorisation
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/capture_an_authorisation
   #
-  # @param [String] transaction_id transaction id of the previously
-  #   submitted authorisation
+  # @applies_defaults +:commerce_type+
   #
-  # @return [Hash] the API response
+  # @param [String] transaction_id the id of the previous transaction
+  # @param [Hash] payload the payload is made up of the keyword
+  #   arguments passed to the method
+  #
+  # @return the API response
   def capture_authorisation(transaction_id, **payload)
     payload = build_payload(payload, defaults: %i[commerce_type])
     client.post "transactions/#{inst_id}/#{transaction_id}/capture", payload
@@ -79,12 +88,13 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
 
   # Cancel an authorisation
   #
-  # @see https://developer.paypoint.com/payments/docs/#payments/cancel_an_authorisation
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/cancel_an_authorisation
   #
-  # @param [String] transaction_id transaction id of the previously
-  #   submitted authorisation
+  # @applies_defaults +:commerce_type+
   #
-  # @return [Hash] the API response
+  # @param (see #capture_authorisation)
+  #
+  # @return the API response
   def cancel_authorisation(transaction_id, **payload)
     payload = build_payload(payload, defaults: %i[commerce_type])
     client.post "transactions/#{inst_id}/#{transaction_id}/cancel", payload
@@ -92,29 +102,29 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
 
   # Get transaction details
   #
-  # @see https://developer.paypoint.com/payments/docs/#payments/request_a_previous_transaction
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/request_a_previous_transaction
   #
   # @param [String] transaction_id the id of the transaction
   #
-  # @return [Hash] the API response
+  # @return the API response
   def transaction(transaction_id)
     client.get "transactions/#{inst_id}/#{transaction_id}"
   end
 
   # Refund a payment
   #
-  # @see https://developer.paypoint.com/payments/docs/#payments/refund_a_payment
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/refund_a_payment
   #
   # Without a payload this will refund the full amount. If you only want
-  # to refund a smaller amount, you will need to pass a transaction
-  # object.
+  # to refund a smaller amount, you will need to pass either the
+  # +amount+ or a +transaction+ hash as a keyword argument.
   #
   # @example Partial refund
-  #   blue.refund_payment(txn_id, transaction: { amount: '3.49' })
+  #   blue.refund_payment(txn_id, amount: '3.49') # assumes currency set as default
   #
-  # @param [String] transaction_id the id of the transaction
+  # @param (see #capture_authorisation)
   #
-  # @return [Hash] the API response
+  # @return the API response
   def refund_payment(transaction_id, **payload)
     defaults = payload[:amount] || payload[:transaction] && payload[:transaction][:amount] ? %i[currency commerce_type] : []
     payload = build_payload(payload, defaults: defaults)

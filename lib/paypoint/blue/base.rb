@@ -9,28 +9,51 @@ require "paypoint/blue/faraday_runscope"
 
 module PayPoint
   module Blue
+
+    # Abstract base class for the API clients. Takes care of
+    # initializing the Faraday client by setting up middlewares in the
+    # right order.
+    #
+    # The base class doesn't implement any of the API interface methods,
+    # but leaves that to the subclasses.
+    #
+    # @note All payloads expected by the API interface methods in the
+    #   subclasses will be processed by {PayloadBuilder} and the
+    #   {HashKeyConverter} middleware. Shortcuts will be moved to their
+    #   proper paths, default values will be applied, and snakecase keys
+    #   will be converted to camelcase.
+    #
+    # @abstract
     class Base
 
       include PayloadBuilder
 
+      # The Faraday client
       attr_reader :client
 
-      # Creates a PayPoint Blue API client.
+      # Creates a PayPoint Blue API client
       #
-      # @param endpoint `:test`, `:live`, or a string with the API endpoint URL
-      # @param inst_id the ID for your installation as provided by PayPoint,
-      #   defaults to `ENV['BLUE_API_INSTALLATION']`
-      # @param api_id your API user ID, defaults to `ENV['BLUE_API_ID']`
-      # @param api_password your API user password, defaults to `ENV['BLUE_API_PASSWORD']`
+      # Options not listed here will be passed on to the Faraday client.
       #
-      # @option options [true,false] :log whether to log requests and responses
-      # @option options [Logger] :logger a custom logger instance, implies `log: true`
-      # @option options [true,false] :raw whether to return the raw Faraday::Response
-      #   object instead of a parsed value
-      # @option options [String] :runscope when used, all traffic will pass through
-      #   the provided Runscope bucket, including notification callbacks
+      # @param endpoint +:test+, +:live+, or a string with the API
+      #   endpoint URL
+      # @param inst_id the ID for your installation as provided by
+      #   PayPoint
+      # @param api_id your API user ID
+      # @param api_password your API user password
       #
-      # other options are passed on to the Faraday client
+      # @option options [Hash] :defaults default payload values; see the
+      #   documentation of the methods of {API} and {Hosted} for the
+      #   payload keys that can have defaults
+      # @option options [true,false] :log whether to log requests and
+      #   responses
+      # @option options [Logger] :logger a custom logger instance,
+      #   implies +log: true+
+      # @option options [true,false] :raw whether to return the raw
+      #   +Faraday::Response+ object instead of a parsed value
+      # @option options [String] :runscope when used, all traffic will
+      #   pass through the provided {https://www.runscope.com/ Runscope}
+      #   bucket, including notification callbacks
       def initialize(endpoint:,
                      inst_id: ENV['BLUE_API_INSTALLATION'],
                      api_id: ENV['BLUE_API_ID'],
@@ -92,6 +115,8 @@ module PayPoint
           f.adapter Faraday.default_adapter
         end
       end
+
     end
+
   end
 end

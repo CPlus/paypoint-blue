@@ -6,9 +6,7 @@ API client for PayPoint's 3rd generation PSP product a.k.a PayPoint Blue.
 
 Add this line to your application's Gemfile:
 
-```ruby
-gem 'paypoint-blue'
-```
+    gem 'paypoint-blue'
 
 And then execute:
 
@@ -20,37 +18,43 @@ Or install it yourself as:
 
 ## Usage
 
-``` ruby
-# Endpoint can be the actual URL or one of :test or :live.
-# Installation id and credentials default to these ENV vars if omitted.
-blue = PayPoint::Blue.hosted_client(
-  endpoint: :test,
-  inst_id: ENV['BLUE_API_INSTALLATION'],
-  api_id: ENV['BLUE_API_ID'],
-  api_password: ENV['BLUE_API_PASSWORD']
-)
+Read the [documentation](http://www.rubydoc.info/gems/paypoint-blue).
 
-blue.ping # => true
+Run `bin/console` to start an interactive prompt for a playgound where
+you can experiment with the API. You will have a bunch of meaningful
+defaults set and some helpers to use. Just call the `help` or `h` method
+in the console to learn more about the different helpers.
 
-blue.make_payment(
-  transaction: {
-    merchantReference: "abcd-1234",
-    money: { amount: { fixed: "4.89" }, currency: "GBP" }
-  },
-  customer: {
-    identity: { merchantCustomerId: "42" },
-    details: { name: "John Doe" }
-  },
-  session: {
-    returnUrl: { url: "http://example.com/callback/abcd-1234" },
-    skin: "9001"
-  }
-) # => { sessionId: "39ac...", redirectUrl: "https://hosted.paypoint.net/...", ... }
+### Example
 
-# The hosted product doesn't have this endpoint, but the client will delegate
-# this request to an API client for the regular API product behind the scenes.
-blue.transaction(transaction_id) # => { processing: { ... }, paymentMethod: { ... }, ... }
-```
+    # Endpoint can be the actual URL or one of :test or :live.
+    # Installation id and credentials default to these ENV vars if omitted.
+    blue = PayPoint::Blue.hosted_client(
+      endpoint: :test,
+      inst_id: ENV['BLUE_API_INSTALLATION'],
+      api_id: ENV['BLUE_API_ID'],
+      api_password: ENV['BLUE_API_PASSWORD'],
+      defaults: {
+        currency: "GBP",
+        return_url: "http://example.com/callback/return",
+        skin: "9001"
+      }
+    )
+
+    blue.ping # => true
+
+    result = blue.make_payment(
+      merchant_ref: "abcd-1234",
+      amount: "4.89",
+      customer_ref: "42",
+      customer_name: "Alice"
+    )
+    result.session_id # => "39ac..."
+    result.redirect_url # => "https://hosted.paypoint.net/..."
+
+    # The hosted product doesn't have this endpoint, but the client will delegate
+    # this request to an API client for the regular API product behind the scenes.
+    blue.transaction(transaction_id) # => { processing: { ... }, payment_method: { ... }, ... }
 
 ## Development
 
