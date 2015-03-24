@@ -13,7 +13,7 @@ module PayPoint
 
       include PayloadBuilder
 
-      attr_reader :client, :inst_id
+      attr_reader :client
 
       # Creates a PayPoint Blue API client.
       #
@@ -53,7 +53,7 @@ module PayPoint
 
       private
 
-      attr_reader :options
+      attr_reader :inst_id, :options
 
       def client_options
         options.select { |k,v| Faraday::ConnectionOptions.members.include?(k) }
