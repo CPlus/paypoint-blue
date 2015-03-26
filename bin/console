@@ -60,7 +60,7 @@ end
 alias :h :help
 
 def blue_default_options
-  return_base = ENV['RUNSCOPE_BUCKET'] ? "https://#{RUNSCOPE_BUCKET}.runscope.net" : "http://bluedemo.dev"
+  return_base = ENV['RUNSCOPE_BUCKET'] ? "https://#{ENV['RUNSCOPE_BUCKET']}.runscope.net" : "http://bluedemo.dev"
   {
     runscope: ENV['RUNSCOPE_BUCKET'],
     defaults: {
