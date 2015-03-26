@@ -12,6 +12,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   shortcut :amount,        'transaction.amount'
   shortcut :currency,      'transaction.currency'
   shortcut :commerce_type, 'transaction.commerce_type'
+  shortcut :description,   'transaction.description'
   shortcut :customer_ref,  'customer.merchant_ref'
   shortcut :customer_name, 'customer.display_name'
 

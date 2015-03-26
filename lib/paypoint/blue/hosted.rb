@@ -13,6 +13,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   shortcut :merchant_ref,  'transaction.merchant_reference'
   shortcut :amount,        'transaction.money.amount.fixed'
   shortcut :currency,      'transaction.money.currency'
+  shortcut :description,   'transaction.description'
   shortcut :customer_ref,  'customer.identity.merchant_customer_id'
   shortcut :customer_name, 'customer.details.name'
   shortcut :return_url,    'session.return_url.url'
