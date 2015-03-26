@@ -112,6 +112,17 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
     client.get "transactions/#{inst_id}/#{transaction_id}"
   end
 
+  # Get transaction details by merchant reference
+  #
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/request_a_previous_transaction
+  #
+  # @param [String] merchant_ref the merchant reference for the transactions
+  #
+  # @return the API response
+  def transactions_by_ref(merchant_ref)
+    client.get "transactions/#{inst_id}/byRef?merchantRef=#{merchant_ref}"
+  end
+
   # Refund a payment
   #
   # @api_url https://developer.paypoint.com/payments/docs/#payments/refund_a_payment

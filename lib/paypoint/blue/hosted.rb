@@ -30,6 +30,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
     :capture_authorisation,
     :cancel_authorisation,
     :transaction,
+    :transactions_by_ref,
     :refund_payment
 
   # The Hosted product has only a few endpoints. However, users most

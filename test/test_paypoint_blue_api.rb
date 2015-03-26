@@ -117,6 +117,18 @@ class TestPayPointBlueAPI < Minitest::Test
     assert_equal 'PAYMENT',     response.transaction.type
   end
 
+  def test_get_transactions_by_ref
+    merchant_ref = 'xyz-42'
+    stub_api_get("transactions/1234/byRef?merchantRef=#{merchant_ref}").
+      to_return(fixture("request_transactions_by_ref.json"))
+
+    response = @blue.transactions_by_ref(merchant_ref)
+    assert_equal 2, response.length
+    assert_equal ['10044238004', '10044238003'], response.map { |txn| txn.transaction.transaction_id }
+    assert_equal ['PREAUTH', 'PAYMENT'], response.map { |txn| txn.transaction.type }
+    assert_equal ['SUCCESS', 'FAILED'], response.map { |txn| txn.transaction.status }
+  end
+
   def test_refund_payment
     txn_id = '10044236139'
     stub_api_post("transactions/1234/#{txn_id}/refund").
