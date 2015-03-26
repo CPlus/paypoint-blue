@@ -192,7 +192,7 @@ class TestPayPointBlueAPI < Minitest::Test
   def request_payload
     with_defaults = payment_payload.dup.tap do |hash|
       hash[:transaction] = hash[:transaction].merge currency: 'GBP', commerce_type: 'ECOM'
-      hash[:callbacks] = { pre_auth_callback: { url: 'http://example.com/callback' } }
+      hash[:callbacks] = { pre_auth_callback: { url: 'http://example.com/callback', format: 'REST_JSON' } }
     end
     camelcase_and_symbolize_keys(with_defaults)
   end

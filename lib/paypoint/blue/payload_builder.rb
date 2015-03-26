@@ -42,6 +42,11 @@ module PayPoint
       # Builds the payload by applying default values and replacing
       # shortcuts
       #
+      # @note When using the callback and notification shortcuts, the
+      # builder will also default their +format+ to +'REST_JSON'+,
+      # because the PayPoint API requires it in _some_ cases. If your
+      # endpoints expect XML, you won't be able to use these shortcuts.
+      #
       # @param [Hash] payload the original payload using shortcuts
       # @param [Array<Symbol>] defaults an array of symbols for defaults
       #   that should be applied to this payload
@@ -54,6 +59,10 @@ module PayPoint
             leaf = segments.pop
             leaf_parent = segments.reduce(payload) {|h,k| h[k] ||= {}}
             leaf_parent[leaf] ||= value
+
+            if key =~ /_(?:callback|notification)\Z/
+              leaf_parent[:format] ||= "REST_JSON"
+            end
           end
         end
         payload

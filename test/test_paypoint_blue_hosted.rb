@@ -89,7 +89,7 @@ class TestPayPointBlueHosted < Minitest::Test
       end
       hash[:session] = {
         return_url: { url: "http://example.com/callback/return" },
-        pre_auth_callback: { url: "http://example.com/callback/preauth" },
+        pre_auth_callback: { url: "http://example.com/callback/preauth", format: 'REST_JSON' },
         skin: "9001"
       }
     end
