@@ -36,7 +36,7 @@ client helpers:
 This is most useful when using the Runscope integration. The available ids are:
 
   :preauth_proceed, :preauth_cancel, :preauth_suspend, :preauth_suspend_replay,
-  :postauth_proceed, :postauth_cancel, :empty
+  :postauth_proceed, :postauth_cancel, :transaction, :expiry, :empty
 
 These will return mocky.io urls which return the proper response. Using the
 Runscope integration you will see the requests PayPoint makes to these endpoints
@@ -67,12 +67,12 @@ def blue_default_options
       currency: 'GBP',
       commerce_type: 'ECOM',
       skin: ENV['BLUE_SKIN'],
-      return_url: "#{return_base}/callback/return",
-      restore_url: "#{return_base}/callback/restore",
+      return_url: "#{return_base}/callback/return/%merchant_ref%",
+      restore_url: "#{return_base}/callback/restore/%merchant_ref%",
       pre_auth_callback: cb(:preauth_proceed),
       post_auth_callback: cb(:postauth_proceed),
-      transaction_notification: cb(:empty),
-      expiry_notification: cb(:empty)
+      transaction_notification: cb(:transaction),
+      expiry_notification: cb(:expiry)
     }
   }
 end
@@ -95,8 +95,10 @@ def cb(id)
     preauth_suspend_replay: "http://www.mocky.io/v2/550f110a364506690a2a4211",
     postauth_proceed:       "http://www.mocky.io/v2/550f1159364506650a2a4212",
     postauth_cancel:        "http://www.mocky.io/v2/550f11633645066c0a2a4213",
+    transaction:            "http://www.mocky.io/v2/550f11723645066c0a2a4214",
+    expiry:                 "http://www.mocky.io/v2/550f11723645066c0a2a4214",
     empty:                  "http://www.mocky.io/v2/550f11723645066c0a2a4214"
-  }[id]
+  }[id] + "/#{id.to_s.split('_').first}/%merchant_ref%"
 end
 
 def callbacks
@@ -104,8 +106,8 @@ def callbacks
     callbacks: {
       preAuthCallback: { url: cb(:preauth_proceed), format: "REST_JSON" },
       postAuthCallback: { url: cb(:postauth_proceed), format: "REST_JSON" },
-      transactionNotification: { url: cb(:empty), format: "REST_JSON" },
-      expiryNotification: { url: cb(:empty), format: "REST_JSON" }
+      transactionNotification: { url: cb(:transaction), format: "REST_JSON" },
+      expiryNotification: { url: cb(:expiry), format: "REST_JSON" }
     }
   }
 end

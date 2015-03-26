@@ -75,9 +75,13 @@ module PayPoint
 
         defaults.each do |key, value|
           if applicable_defaults.include?(key) && !payload.has_key?(key)
-            payload[key] = value
+            payload[key] = interpolate_values(value, payload)
           end
         end
+      end
+
+      def interpolate_values(value, payload)
+        value.gsub(/%(\w+)%/) {|m| payload[$1.to_sym] || m}
       end
 
     end
