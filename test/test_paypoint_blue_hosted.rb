@@ -66,6 +66,17 @@ class TestPayPointBlueHosted < Minitest::Test
     assert_equal "SUCCESS", response.status
   end
 
+  def test_submit_payout
+    stub_hosted_post('sessions/1234/payouts').
+      with(body: request_payload).
+      to_return(fixture("submit_payout_hosted.json"))
+
+    response = @blue.submit_payout(**payment_payload)
+    assert_equal "9427d641-54b5-496c-a989-22c284144eb6", response.session_id
+    assert_equal "https://hosted.mite.paypoint.net/hosted/1acebe67-c90d-47b0-b721-45dc015b2479/begin/9427d641-54b5-496c-a989-22c284144eb6", response.redirect_url
+    assert_equal "SUCCESS", response.status
+  end
+
   private
 
   def payment_payload

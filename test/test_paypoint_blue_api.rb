@@ -178,6 +178,19 @@ class TestPayPointBlueAPI < Minitest::Test
     assert_equal 'FAILED', error.response[:body].transaction.status
   end
 
+  def test_submit_payout
+    stub_api_post('transactions/1234/payout').
+      with(body: request_payload).
+      to_return(fixture("submit_payout.json"))
+
+    response = @blue.submit_payout(**payment_payload)
+    assert_equal 'AUTHORISED',  response.processing.auth_response.status
+    assert_equal '10044238245', response.transaction.transaction_id
+    assert_equal 'SUCCESS',     response.transaction.status
+    assert_equal 'PAYOUT',      response.transaction.type
+    assert_equal 'TzHstVJalvw0DXTr5SrW3-Q', response.trace
+  end
+
   private
 
   def payment_payload

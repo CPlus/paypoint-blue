@@ -166,4 +166,27 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
     client.post "transactions/#{inst_id}/#{transaction_id}/refund", payload
   end
 
+  # Submit a payout
+  #
+  # @api_url https://developer.paypoint.com/payments/docs/#payments/submit_a_payout
+  #
+  # @applies_defaults
+  #   +:currency+, +:commerce_type+, +:pre_auth_callback+,
+  #   +:post_auth_callback+, +:transaction_notification+,
+  #   +:expiry_notification+
+  #
+  # @param [Hash] payload the payload is made up of the keyword
+  #   arguments passed to the method
+  #
+  # @return the API response
+  def submit_payout(**payload)
+    payload = build_payload(payload,
+      defaults: %i[
+        currency commerce_type pre_auth_callback post_auth_callback
+        transaction_notification expiry_notification
+      ]
+    )
+    client.post "transactions/#{inst_id}/payout", payload
+  end
+
 end
