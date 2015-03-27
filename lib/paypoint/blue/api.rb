@@ -75,7 +75,9 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @api_url https://developer.paypoint.com/payments/docs/#payments/capture_an_authorisation
   #
-  # @applies_defaults +:commerce_type+
+  # @applies_defaults
+  #   +:commerce_type+, +:pre_auth_callback+, +:post_auth_callback+,
+  #   +:transaction_notification+, +:expiry_notification+
   #
   # @param [String] transaction_id the id of the previous transaction
   # @param [Hash] payload the payload is made up of the keyword
@@ -83,7 +85,12 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return the API response
   def capture_authorisation(transaction_id, **payload)
-    payload = build_payload(payload, defaults: %i[commerce_type])
+    payload = build_payload(payload,
+      defaults: %i[
+        commerce_type pre_auth_callback post_auth_callback
+        transaction_notification expiry_notification
+      ]
+    )
     client.post "transactions/#{inst_id}/#{transaction_id}/capture", payload
   end
 
@@ -91,13 +98,20 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @api_url https://developer.paypoint.com/payments/docs/#payments/cancel_an_authorisation
   #
-  # @applies_defaults +:commerce_type+
+  # @applies_defaults
+  #   +:commerce_type+, +:pre_auth_callback+, +:post_auth_callback+,
+  #   +:transaction_notification+, +:expiry_notification+
   #
   # @param (see #capture_authorisation)
   #
   # @return the API response
   def cancel_authorisation(transaction_id, **payload)
-    payload = build_payload(payload, defaults: %i[commerce_type])
+    payload = build_payload(payload,
+      defaults: %i[
+        commerce_type pre_auth_callback post_auth_callback
+        transaction_notification expiry_notification
+      ]
+    )
     client.post "transactions/#{inst_id}/#{transaction_id}/cancel", payload
   end
 
@@ -134,11 +148,20 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # @example Partial refund
   #   blue.refund_payment(txn_id, amount: '3.49') # assumes currency set as default
   #
+  # @applies_defaults
+  #   only if amount is set: +:currency+, +:commerce_type+
+  # @applies_defaults
+  #   +:pre_auth_callback+, +:post_auth_callback+,
+  #   +:transaction_notification+, +:expiry_notification+
+  #
   # @param (see #capture_authorisation)
   #
   # @return the API response
   def refund_payment(transaction_id, **payload)
-    defaults = payload[:amount] || payload[:transaction] && payload[:transaction][:amount] ? %i[currency commerce_type] : []
+    defaults = %i[ pre_auth_callback post_auth_callback transaction_notification expiry_notification ]
+    if payload[:amount] || payload[:transaction] && payload[:transaction][:amount]
+      defaults += %i[currency commerce_type]
+    end
     payload = build_payload(payload, defaults: defaults)
     client.post "transactions/#{inst_id}/#{transaction_id}/refund", payload
   end
