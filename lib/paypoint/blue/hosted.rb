@@ -58,7 +58,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @api_url https://developer.paypoint.com/payments/docs/#payments/make_a_payment
   #
   # @applies_defaults
-  #   +:currency+, +:return_url+, +:restore_url+, +:skin+,
+  #   +:currency+, +:commerce_type+, +:return_url+, +:restore_url+, +:skin+,
   #   +:pre_auth_callback+, +:post_auth_callback+, +:transaction_notification+
   #
   # @param [Hash] payload the payload is made up of the keyword
@@ -68,7 +68,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   def make_payment(**payload)
     payload = build_payload(payload,
       defaults: %i[
-        currency return_url restore_url skin
+        currency commerce_type return_url restore_url skin
         pre_auth_callback post_auth_callback transaction_notification
       ]
     )
