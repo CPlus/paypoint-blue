@@ -98,7 +98,7 @@ def cb(id)
     transaction:            "http://www.mocky.io/v2/550f11723645066c0a2a4214",
     expiry:                 "http://www.mocky.io/v2/550f11723645066c0a2a4214",
     empty:                  "http://www.mocky.io/v2/550f11723645066c0a2a4214"
-  }[id] + "/#{id.to_s.split('_').first}/%merchant_ref%"
+  }[id] + "/#{id.to_s.split('_').first}"
 end
 
 def callbacks
