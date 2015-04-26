@@ -68,7 +68,6 @@ def blue_default_options
       commerce_type: 'ECOM',
       skin: ENV['BLUE_SKIN'],
       return_url: "#{return_base}/callback/return/%merchant_ref%",
-      restore_url: "#{return_base}/callback/restore/%merchant_ref%",
       pre_auth_callback: cb(:preauth_proceed),
       post_auth_callback: cb(:postauth_proceed),
       transaction_notification: cb(:transaction),
