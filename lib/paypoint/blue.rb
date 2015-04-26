@@ -20,5 +20,15 @@ module PayPoint
       PayPoint::Blue::Hosted.new(**options)
     end
 
+    # Parse a raw JSON PayPoint callback payload similarly to the
+    # Faraday response middlewares set up in {PayPoint::Blue::Base}.
+    #
+    # @return [Hashie::Mash] the parsed, snake_cased response
+    def self.parse_payload(json)
+      payload = JSON.parse(json.is_a?(IO) ? json.read : json.to_s)
+      payload = Utils.snakecase_and_symbolize_keys(payload)
+      Hashie::Mash.new(payload)
+    end
+
   end
 end
