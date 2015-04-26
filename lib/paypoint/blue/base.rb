@@ -96,7 +96,6 @@ module PayPoint
             f.response :mashify
             f.use PayPoint::Blue::HashKeyConverter
           end
-          f.response :dates
           f.response :json, content_type: /\bjson$/
           f.response :logger, options[:logger] if options[:logger] || options[:log]
 
