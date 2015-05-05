@@ -39,7 +39,7 @@ class FaradayRunscope < Faraday::Middleware
   end
 
   def runscope_host(host)
-    "#{host.tr('.', '-')}-#{bucket}.runscope.net"
+    "#{host.gsub('-', '--').tr('.', '-')}-#{bucket}.runscope.net"
   end
 
   def transform_paths!(enum, path=nil)
