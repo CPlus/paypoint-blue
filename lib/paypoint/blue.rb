@@ -25,7 +25,11 @@ module PayPoint
     #
     # @return [Hashie::Mash] the parsed, snake_cased response
     def self.parse_payload(json)
-      payload = JSON.parse(json.is_a?(IO) ? json.read : json.to_s)
+      payload = json.respond_to?(:read) ? json.read : json.to_s
+      if payload.encoding == Encoding::ASCII_8BIT
+        payload.force_encoding 'iso-8859-1'
+      end
+      payload = JSON.parse(payload)
       payload = Utils.snakecase_and_symbolize_keys(payload)
       Hashie::Mash.new(payload)
     end
