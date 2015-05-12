@@ -19,8 +19,6 @@ module PayPoint
           end
         end
       end
-
     end
-
   end
 end

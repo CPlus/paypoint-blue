@@ -62,9 +62,9 @@ module PayPoint
 
         @endpoint = get_endpoint_or_override_with(endpoint)
 
-        @inst_id      = inst_id or raise ArgumentError, "missing inst_id"
-        @api_id       = api_id or raise ArgumentError, "missing api_id"
-        @api_password = api_password or raise ArgumentError, "missing api_password"
+        @inst_id      = inst_id or raise ArgumentError, 'missing inst_id'
+        @api_id       = api_id or raise ArgumentError, 'missing api_id'
+        @api_password = api_password or raise ArgumentError, 'missing api_password'
 
         options[:url] = @endpoint
         @options = options
@@ -118,8 +118,6 @@ module PayPoint
           f.adapter Faraday.default_adapter
         end
       end
-
     end
-
   end
 end
