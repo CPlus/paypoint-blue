@@ -11,7 +11,11 @@ module PayPoint
       end
 
       module ClassMethods
-        attr_accessor :shortcuts
+        def shortcuts
+          @shortcuts ||= {}
+        end
+
+        attr_writer :shortcuts
 
         # Define a payload shortcut
         #
@@ -27,11 +31,10 @@ module PayPoint
         # @param [Symbol] key the shortcut key
         # @param [String] path a path into the payload with segments
         #   separated by dots (e.g. +'transaction.money.amount.fixed'+)
-        def shortcut(key, path=nil)
+        def shortcut(key, path = nil)
           if path.nil?
-            shortcuts && shortcuts[key]
+            shortcuts[key]
           else
-            self.shortcuts ||= {}
             shortcuts[key] = path
           end
         end
@@ -83,8 +86,6 @@ module PayPoint
       def interpolate_values(value, payload)
         value.gsub(/%(\w+)%/) {|m| payload[$1.to_sym] || m}
       end
-
     end
-
   end
 end
