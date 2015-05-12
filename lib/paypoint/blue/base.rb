@@ -83,7 +83,7 @@ module PayPoint
       end
 
       def client_options
-        options.select { |k,v| Faraday::ConnectionOptions.members.include?(k) }
+        options.select { |k, _| Faraday::ConnectionOptions.members.include?(k) }
       end
 
       def build_client
