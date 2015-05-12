@@ -36,6 +36,9 @@ module PayPoint
       # types of errors
       class Client < Error; end
 
+      # Specific error class for non existing sessions
+      class NotFound < Error; end
+
       # Specific error class for errors with a +'V'+ outcome code
       class Validation < Error; end
 

@@ -28,12 +28,22 @@ module PayPoint
           else
             raise Error::Client, response_values(env)
           end
-        elsif env.status >= 400
+        elsif not_found?(env)
+          raise Error::NotFound, response_values(env)
+        elsif client_error?(env)
           raise Error::Client, response_values(env)
         end
       end
 
       private
+
+      def not_found?(env)
+        env.status == 404 && env.body[:reason_code] == "A400"
+      end
+
+      def client_error?(env)
+        env.status >= 400
+      end
 
       def fetch_outcome(env)
         env.body.is_a?(Hash) && env.body[:outcome]
@@ -46,8 +56,6 @@ module PayPoint
           body:    env.body
         }
       end
-
     end
-
   end
 end

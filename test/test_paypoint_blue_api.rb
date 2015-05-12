@@ -129,6 +129,20 @@ class TestPayPointBlueAPI < Minitest::Test
     assert_equal ['SUCCESS', 'FAILED'], response.map { |txn| txn.transaction.status }
   end
 
+  def test_transaction_not_found
+    merchant_ref = 'xyz-42'
+    stub_api_get("transactions/1234/byRef?merchantRef=#{merchant_ref}").
+      to_return(fixture("transaction_not_found.json"))
+
+    error = assert_raises(PayPoint::Blue::Error::NotFound) do
+      @blue.transactions_by_ref(merchant_ref)
+    end
+    # NOTE: The transaction not found error response doesn't include
+    # an `outcome` field, therefore the message will be generic
+    assert_equal 'the server responded with status 404', error.message
+    assert_nil error.code
+  end
+
   def test_refund_payment
     txn_id = '10044236139'
     stub_api_post("transactions/1234/#{txn_id}/refund").
