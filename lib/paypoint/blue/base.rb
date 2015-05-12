@@ -60,7 +60,7 @@ module PayPoint
                      api_password: ENV['BLUE_API_PASSWORD'],
                      **options)
 
-        @endpoint = self.class.const_get('ENDPOINTS').fetch(endpoint, endpoint.to_s)
+        @endpoint = get_endpoint_or_override_with(endpoint)
 
         @inst_id      = inst_id or raise ArgumentError, "missing inst_id"
         @api_id       = api_id or raise ArgumentError, "missing api_id"
@@ -77,6 +77,10 @@ module PayPoint
       private
 
       attr_reader :inst_id, :options
+
+      def get_endpoint_or_override_with(endpoint)
+        self.class.const_get('ENDPOINTS').fetch(endpoint, endpoint.to_s)
+      end
 
       def client_options
         options.select { |k,v| Faraday::ConnectionOptions.members.include?(k) }
