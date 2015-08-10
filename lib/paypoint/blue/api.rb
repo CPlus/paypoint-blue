@@ -44,12 +44,10 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return the API response
   def make_payment(**payload)
-    payload = build_payload(payload,
-      defaults: %i(
-        currency commerce_type pre_auth_callback post_auth_callback
-        transaction_notification expiry_notification
-      ),
-                           )
+    payload = build_payload payload, defaults: %i(
+      currency commerce_type pre_auth_callback post_auth_callback
+      transaction_notification expiry_notification
+    )
     client.post "transactions/#{inst_id}/payment", payload
   end
 
@@ -84,12 +82,10 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return the API response
   def capture_authorisation(transaction_id, **payload)
-    payload = build_payload(payload,
-      defaults: %i(
-        commerce_type pre_auth_callback post_auth_callback
-        transaction_notification expiry_notification
-      ),
-                           )
+    payload = build_payload payload, defaults: %i(
+      commerce_type pre_auth_callback post_auth_callback
+      transaction_notification expiry_notification
+    )
     client.post "transactions/#{inst_id}/#{transaction_id}/capture", payload
   end
 
@@ -105,12 +101,10 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return the API response
   def cancel_authorisation(transaction_id, **payload)
-    payload = build_payload(payload,
-      defaults: %i(
-        commerce_type pre_auth_callback post_auth_callback
-        transaction_notification expiry_notification
-      ),
-                           )
+    payload = build_payload payload, defaults: %i(
+      commerce_type pre_auth_callback post_auth_callback
+      transaction_notification expiry_notification
+    )
     client.post "transactions/#{inst_id}/#{transaction_id}/cancel", payload
   end
 
@@ -183,12 +177,10 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return the API response
   def submit_payout(**payload)
-    payload = build_payload(payload,
-      defaults: %i(
-        currency commerce_type pre_auth_callback post_auth_callback
-        transaction_notification expiry_notification
-      ),
-                           )
+    payload = build_payload payload, defaults: %i(
+      currency commerce_type pre_auth_callback post_auth_callback
+      transaction_notification expiry_notification
+    )
     client.post "transactions/#{inst_id}/payout", payload
   end
 end

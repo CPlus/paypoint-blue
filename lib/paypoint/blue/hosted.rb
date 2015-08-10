@@ -65,12 +65,10 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   #
   # @return the API response
   def make_payment(**payload)
-    payload = build_payload(payload,
-      defaults: %i(
-        currency commerce_type return_url restore_url skin
-        pre_auth_callback post_auth_callback transaction_notification
-      ),
-                           )
+    payload = build_payload payload, defaults: %i(
+      currency commerce_type return_url restore_url skin
+      pre_auth_callback post_auth_callback transaction_notification
+    )
     client.post "sessions/#{inst_id}/payments", build_payload(payload)
   end
 
@@ -104,12 +102,10 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   #
   # @return the API response
   def submit_payout(**payload)
-    payload = build_payload(payload,
-      defaults: %i(
-        currency commerce_type return_url restore_url skin
-        pre_auth_callback post_auth_callback transaction_notification
-      ),
-                           )
+    payload = build_payload payload, defaults: %i(
+      currency commerce_type return_url restore_url skin
+      pre_auth_callback post_auth_callback transaction_notification
+    )
     client.post "sessions/#{inst_id}/payouts", build_payload(payload)
   end
 end
