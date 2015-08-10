@@ -1,10 +1,8 @@
 module PayPoint
   module Blue
-
     # Abstract error base class
     # @abstract
     class Error < StandardError
-
       # the response that caused the error
       attr_reader :response
 
@@ -53,8 +51,6 @@ module PayPoint
 
       # Specific error class for errors with an +'U'+ outcome code
       class Suspended < Error; end
-
     end
-
   end
 end

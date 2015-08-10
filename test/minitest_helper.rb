@@ -1,8 +1,8 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
-require 'paypoint/blue'
+$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
+require "paypoint/blue"
 
-require 'minitest/autorun'
-require 'webmock/minitest'
+require "minitest/autorun"
+require "webmock/minitest"
 
 include PayPoint::Blue::Utils
 
@@ -31,5 +31,5 @@ def stub_hosted_post(path)
 end
 
 def fixture(file)
-  File.new(File.join(File.expand_path('../fixtures', __FILE__), file))
+  File.new(File.join(File.expand_path("../fixtures", __FILE__), file))
 end

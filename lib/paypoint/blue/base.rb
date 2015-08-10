@@ -9,7 +9,6 @@ require "paypoint/blue/faraday_runscope"
 
 module PayPoint
   module Blue
-
     # Abstract base class for the API clients. Takes care of
     # initializing the Faraday client by setting up middlewares in the
     # right order.
@@ -25,7 +24,6 @@ module PayPoint
     #
     # @abstract
     class Base
-
       include PayloadBuilder
 
       # The Faraday client
@@ -55,16 +53,16 @@ module PayPoint
       #   pass through the provided {https://www.runscope.com/ Runscope}
       #   bucket, including notification callbacks
       def initialize(endpoint:,
-                     inst_id: ENV['BLUE_API_INSTALLATION'],
-                     api_id: ENV['BLUE_API_ID'],
-                     api_password: ENV['BLUE_API_PASSWORD'],
+                     inst_id: ENV["BLUE_API_INSTALLATION"],
+                     api_id: ENV["BLUE_API_ID"],
+                     api_password: ENV["BLUE_API_PASSWORD"],
                      **options)
 
         @endpoint = get_endpoint_or_override_with(endpoint)
 
-        @inst_id      = inst_id or raise ArgumentError, 'missing inst_id'
-        @api_id       = api_id or raise ArgumentError, 'missing api_id'
-        @api_password = api_password or raise ArgumentError, 'missing api_password'
+        @inst_id      = inst_id or fail ArgumentError, "missing inst_id"
+        @api_id       = api_id or fail ArgumentError, "missing api_id"
+        @api_password = api_password or fail ArgumentError, "missing api_password"
 
         options[:url] = @endpoint
         @options = options
@@ -79,7 +77,7 @@ module PayPoint
       attr_reader :inst_id, :options
 
       def get_endpoint_or_override_with(endpoint)
-        self.class.const_get('ENDPOINTS').fetch(endpoint, endpoint.to_s)
+        self.class.const_get("ENDPOINTS").fetch(endpoint, endpoint.to_s)
       end
 
       def client_options

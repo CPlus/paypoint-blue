@@ -2,10 +2,8 @@ require "paypoint/blue/error"
 
 module PayPoint
   module Blue
-
     # Faraday response middleware for handling various error scenarios
     class RaiseErrors < Faraday::Response::Middleware
-
       # Raise an error if the response outcome signifies a failure or
       # the HTTP status code is 400 or greater.
       #
@@ -20,18 +18,18 @@ module PayPoint
         if outcome
           case outcome[:reason_code]
           when /^S/ then return
-          when /^V/ then raise Error::Validation, response_values(env)
-          when /^A/ then raise Error::Auth,       response_values(env)
-          when /^C/ then raise Error::Cancelled,  response_values(env)
-          when /^X/ then raise Error::External,   response_values(env)
-          when /^U/ then raise Error::Suspended,  response_values(env)
+          when /^V/ then fail Error::Validation, response_values(env)
+          when /^A/ then fail Error::Auth,       response_values(env)
+          when /^C/ then fail Error::Cancelled,  response_values(env)
+          when /^X/ then fail Error::External,   response_values(env)
+          when /^U/ then fail Error::Suspended,  response_values(env)
           else
-            raise Error::Client, response_values(env)
+            fail Error::Client, response_values(env)
           end
         elsif not_found?(env)
-          raise Error::NotFound, response_values(env)
+          fail Error::NotFound, response_values(env)
         elsif client_error?(env)
-          raise Error::Client, response_values(env)
+          fail Error::Client, response_values(env)
         end
       end
 
@@ -53,7 +51,7 @@ module PayPoint
         {
           status:  env.status,
           headers: env.response_headers,
-          body:    env.body
+          body:    env.body,
         }
       end
     end

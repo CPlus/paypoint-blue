@@ -1,11 +1,9 @@
 module PayPoint
   module Blue
-
     # Provides helper methods for payload construction used throughout
     # the API. It allows definition of payload shortcuts and default
     # values.
     module PayloadBuilder
-
       def self.included(base)
         base.extend ClassMethods
       end
@@ -58,9 +56,9 @@ module PayPoint
         payload.keys.each do |key|
           if path = self.class.shortcut(key)
             value = payload.delete(key)
-            segments = path.split('.').map(&:to_sym)
+            segments = path.split(".").map(&:to_sym)
             leaf = segments.pop
-            leaf_parent = segments.reduce(payload) {|h,k| h[k] ||= {}}
+            leaf_parent = segments.reduce(payload) { |h, k| h[k] ||= {} }
             leaf_parent[leaf] ||= value
 
             if key =~ /_(?:callback|notification)\Z/
@@ -77,14 +75,14 @@ module PayPoint
         return unless defaults
 
         defaults.each do |key, value|
-          if applicable_defaults.include?(key) && !payload.has_key?(key)
+          if applicable_defaults.include?(key) && !payload.key?(key)
             payload[key] = interpolate_values(value, payload)
           end
         end
       end
 
       def interpolate_values(value, payload)
-        value.gsub(/%(\w+)%/) {|m| payload[$1.to_sym] || m}
+        value.gsub(/%(\w+)%/) { |m| payload[Regexp.last_match(1).to_sym] || m }
       end
     end
   end

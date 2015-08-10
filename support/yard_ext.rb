@@ -3,7 +3,7 @@ class ShortcutHandler < YARD::Handlers::Ruby::Base
   namespace_only
 
   def process
-    unless namespace.docstring.index('== Payload Shortcuts')
+    unless namespace.docstring.index("== Payload Shortcuts")
       namespace.docstring += "\n\n== Payload Shortcuts\n"
     end
     shortcut = statement.parameters.first.jump(:ident).source

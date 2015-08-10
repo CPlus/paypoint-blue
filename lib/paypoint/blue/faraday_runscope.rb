@@ -1,5 +1,4 @@
 class FaradayRunscope < Faraday::Middleware
-
   CUSTOM_PORT = "Runscope-Request-Port".freeze
 
   def initialize(app, bucket, transform_paths: false)
@@ -39,10 +38,10 @@ class FaradayRunscope < Faraday::Middleware
   end
 
   def runscope_host(host)
-    "#{host.gsub('-', '--').tr('.', '-')}-#{bucket}.runscope.net"
+    "#{host.gsub("-", "--").tr(".", "-")}-#{bucket}.runscope.net"
   end
 
-  def transform_paths!(enum, path=nil)
+  def transform_paths!(enum, path = nil)
     each_pair(enum) do |key, value|
       key_path = path ? "#{path}.#{key}" : key.to_s
       if value.respond_to?(:each_with_index)
@@ -70,5 +69,4 @@ class FaradayRunscope < Faraday::Middleware
       path_to_transform === path
     end
   end
-
 end

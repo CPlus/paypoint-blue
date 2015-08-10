@@ -5,7 +5,6 @@ require "paypoint/blue/utils"
 
 module PayPoint
   module Blue
-
     # Creates a client for the PayPoint Blue API product
     #
     # @see PayPoint::Blue::Base#initialize
@@ -27,12 +26,11 @@ module PayPoint
     def self.parse_payload(json)
       payload = json.respond_to?(:read) ? json.read : json.to_s
       if payload.encoding == Encoding::ASCII_8BIT
-        payload.force_encoding 'iso-8859-1'
+        payload.force_encoding "iso-8859-1"
       end
       payload = JSON.parse(payload)
       payload = Utils.snakecase_and_symbolize_keys(payload)
       Hashie::Mash.new(payload)
     end
-
   end
 end

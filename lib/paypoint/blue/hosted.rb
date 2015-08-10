@@ -4,26 +4,25 @@ require "paypoint/blue/base"
 
 # Client class for the Hosted product.
 class PayPoint::Blue::Hosted < PayPoint::Blue::Base
-
   ENDPOINTS = {
     test: "https://hosted.mite.paypoint.net/hosted/rest",
-    live: "https://hosted.paypoint.net/hosted/rest"
+    live: "https://hosted.paypoint.net/hosted/rest",
   }.freeze
 
-  shortcut :merchant_ref,  'transaction.merchant_reference'
-  shortcut :amount,        'transaction.money.amount.fixed'
-  shortcut :currency,      'transaction.money.currency'
-  shortcut :commerce_type, 'transaction.commerce_type'
-  shortcut :description,   'transaction.description'
-  shortcut :customer_ref,  'customer.identity.merchant_customer_id'
-  shortcut :customer_name, 'customer.details.name'
-  shortcut :return_url,    'session.return_url.url'
-  shortcut :restore_url,   'session.restore_url.url'
-  shortcut :skin,          'session.skin'
+  shortcut :merchant_ref,  "transaction.merchant_reference"
+  shortcut :amount,        "transaction.money.amount.fixed"
+  shortcut :currency,      "transaction.money.currency"
+  shortcut :commerce_type, "transaction.commerce_type"
+  shortcut :description,   "transaction.description"
+  shortcut :customer_ref,  "customer.identity.merchant_customer_id"
+  shortcut :customer_name, "customer.details.name"
+  shortcut :return_url,    "session.return_url.url"
+  shortcut :restore_url,   "session.restore_url.url"
+  shortcut :skin,          "session.skin"
 
-  shortcut :pre_auth_callback,        'session.pre_auth_callback.url'
-  shortcut :post_auth_callback,       'session.post_auth_callback.url'
-  shortcut :transaction_notification, 'session.transaction_notification.url'
+  shortcut :pre_auth_callback,        "session.pre_auth_callback.url"
+  shortcut :post_auth_callback,       "session.post_auth_callback.url"
+  shortcut :transaction_notification, "session.transaction_notification.url"
 
   extend Forwardable
 
@@ -67,11 +66,11 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @return the API response
   def make_payment(**payload)
     payload = build_payload(payload,
-      defaults: %i[
+      defaults: %i(
         currency commerce_type return_url restore_url skin
         pre_auth_callback post_auth_callback transaction_notification
-      ]
-    )
+      ),
+                           )
     client.post "sessions/#{inst_id}/payments", build_payload(payload)
   end
 
@@ -106,12 +105,11 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @return the API response
   def submit_payout(**payload)
     payload = build_payload(payload,
-      defaults: %i[
+      defaults: %i(
         currency commerce_type return_url restore_url skin
         pre_auth_callback post_auth_callback transaction_notification
-      ]
-    )
+      ),
+                           )
     client.post "sessions/#{inst_id}/payouts", build_payload(payload)
   end
-
 end

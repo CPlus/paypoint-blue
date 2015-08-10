@@ -1,11 +1,9 @@
 module PayPoint
   module Blue
-
     # Faraday middleware for converting hash keys in the request payload
     # from snake_case to camelCase and the other way around in the
     # response.
     class HashKeyConverter < Faraday::Middleware
-
       # Convert hash keys to camelCase in the request and to snake_case
       # in the response
       def call(env)

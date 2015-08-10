@@ -1,17 +1,16 @@
 module PayPoint
   module Blue
     module Utils
-
       extend self
 
       def snakecase_and_symbolize_keys(hash)
         case hash
         when Hash
-          hash.each_with_object({}) do |(key, value), snakified|
+          hash.each_with_object({},) do |(key, value), snakified|
             snakified[snakecase(key)] = snakecase_and_symbolize_keys(value)
           end
         when Enumerable
-          hash.map {|v| snakecase_and_symbolize_keys(v)}
+          hash.map { |v| snakecase_and_symbolize_keys(v) }
         else
           hash
         end
@@ -20,11 +19,11 @@ module PayPoint
       def camelcase_and_symbolize_keys(hash)
         case hash
         when Hash
-          hash.each_with_object({}) do |(key, value), camelized|
+          hash.each_with_object({},) do |(key, value), camelized|
             camelized[camelcase(key)] = camelcase_and_symbolize_keys(value)
           end
         when Enumerable
-          hash.map {|v| camelcase_and_symbolize_keys(v)}
+          hash.map { |v| camelcase_and_symbolize_keys(v) }
         else
           hash
         end
@@ -42,10 +41,9 @@ module PayPoint
 
       def camelcase(original)
         string = original.is_a?(Symbol) ? original.to_s : original.dup
-        string.gsub!(/_([a-z\d]*)/) { $1.capitalize }
+        string.gsub!(/_([a-z\d]*)/) { Regexp.last_match(1).capitalize }
         string.to_sym
       end
-
     end
   end
 end

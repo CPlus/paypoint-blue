@@ -1,0 +1,11 @@
+PreCommit:
+  ALL:
+    quiet: false
+
+  RuboCop:
+    enabled: yes
+    on_warn: fail # Treat all warnings as failures
+
+CommitMsg:
+  TextWidth:
+    enabled: yes

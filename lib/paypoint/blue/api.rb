@@ -2,24 +2,23 @@ require "paypoint/blue/base"
 
 # Client class for the API product.
 class PayPoint::Blue::API < PayPoint::Blue::Base
-
   ENDPOINTS = {
     test: "https://api.mite.paypoint.net:2443/acceptor/rest",
     live: "https://api.paypoint.net/acceptor/rest",
   }.freeze
 
-  shortcut :merchant_ref,  'transaction.merchant_ref'
-  shortcut :amount,        'transaction.amount'
-  shortcut :currency,      'transaction.currency'
-  shortcut :commerce_type, 'transaction.commerce_type'
-  shortcut :description,   'transaction.description'
-  shortcut :customer_ref,  'customer.merchant_ref'
-  shortcut :customer_name, 'customer.display_name'
+  shortcut :merchant_ref,  "transaction.merchant_ref"
+  shortcut :amount,        "transaction.amount"
+  shortcut :currency,      "transaction.currency"
+  shortcut :commerce_type, "transaction.commerce_type"
+  shortcut :description,   "transaction.description"
+  shortcut :customer_ref,  "customer.merchant_ref"
+  shortcut :customer_name, "customer.display_name"
 
-  shortcut :pre_auth_callback,        'callbacks.pre_auth_callback.url'
-  shortcut :post_auth_callback,       'callbacks.post_auth_callback.url'
-  shortcut :transaction_notification, 'callbacks.transaction_notification.url'
-  shortcut :expiry_notification,      'callbacks.expiry_notification.url'
+  shortcut :pre_auth_callback,        "callbacks.pre_auth_callback.url"
+  shortcut :post_auth_callback,       "callbacks.post_auth_callback.url"
+  shortcut :transaction_notification, "callbacks.transaction_notification.url"
+  shortcut :expiry_notification,      "callbacks.expiry_notification.url"
 
   # Test connectivity
   #
@@ -46,11 +45,11 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # @return the API response
   def make_payment(**payload)
     payload = build_payload(payload,
-      defaults: %i[
+      defaults: %i(
         currency commerce_type pre_auth_callback post_auth_callback
         transaction_notification expiry_notification
-      ]
-    )
+      ),
+                           )
     client.post "transactions/#{inst_id}/payment", payload
   end
 
@@ -86,11 +85,11 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # @return the API response
   def capture_authorisation(transaction_id, **payload)
     payload = build_payload(payload,
-      defaults: %i[
+      defaults: %i(
         commerce_type pre_auth_callback post_auth_callback
         transaction_notification expiry_notification
-      ]
-    )
+      ),
+                           )
     client.post "transactions/#{inst_id}/#{transaction_id}/capture", payload
   end
 
@@ -107,11 +106,11 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # @return the API response
   def cancel_authorisation(transaction_id, **payload)
     payload = build_payload(payload,
-      defaults: %i[
+      defaults: %i(
         commerce_type pre_auth_callback post_auth_callback
         transaction_notification expiry_notification
-      ]
-    )
+      ),
+                           )
     client.post "transactions/#{inst_id}/#{transaction_id}/cancel", payload
   end
 
@@ -158,9 +157,9 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return the API response
   def refund_payment(transaction_id, **payload)
-    defaults = %i[ pre_auth_callback post_auth_callback transaction_notification expiry_notification ]
+    defaults = %i(pre_auth_callback post_auth_callback transaction_notification expiry_notification)
     if payload[:amount] || payload[:transaction] && payload[:transaction][:amount]
-      defaults += %i[currency commerce_type]
+      defaults += %i(currency commerce_type)
     end
     payload = build_payload(payload, defaults: defaults)
     client.post "transactions/#{inst_id}/#{transaction_id}/refund", payload
@@ -181,12 +180,11 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # @return the API response
   def submit_payout(**payload)
     payload = build_payload(payload,
-      defaults: %i[
+      defaults: %i(
         currency commerce_type pre_auth_callback post_auth_callback
         transaction_notification expiry_notification
-      ]
-    )
+      ),
+                           )
     client.post "transactions/#{inst_id}/payout", payload
   end
-
 end
