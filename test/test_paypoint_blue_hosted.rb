@@ -8,6 +8,7 @@ class TestPayPointBlueHosted < Minitest::Test
         currency:          "GBP",
         skin:              "9001",
         return_url:        "http://example.com/callback/return",
+        cancel_url:        "http://example.com/callback/cancel",
         pre_auth_callback: "http://example.com/callback/preauth",
       }
     )
@@ -118,6 +119,7 @@ class TestPayPointBlueHosted < Minitest::Test
       end
       hash[:session] = {
         return_url:        { url: "http://example.com/callback/return" },
+        cancel_url:        { url: "http://example.com/callback/cancel" },
         pre_auth_callback: { url: "http://example.com/callback/preauth", format: "REST_JSON" },
         skin:              "9001",
       }

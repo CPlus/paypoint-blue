@@ -17,6 +17,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   shortcut :customer_ref,  "customer.identity.merchant_customer_id"
   shortcut :customer_name, "customer.details.name"
   shortcut :return_url,    "session.return_url.url"
+  shortcut :cancel_url,    "session.cancel_url.url"
   shortcut :restore_url,   "session.restore_url.url"
   shortcut :skin,          "session.skin"
 
@@ -57,8 +58,9 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @api_url https://developer.paypoint.com/payments/docs/#payments/make_a_payment
   #
   # @applies_defaults
-  #   +:currency+, +:commerce_type+, +:return_url+, +:restore_url+, +:skin+,
-  #   +:pre_auth_callback+, +:post_auth_callback+, +:transaction_notification+
+  #   +:currency+, +:commerce_type+, +:return_url+, +:cancel_url+,
+  #   +:restore_url+, +:skin+, +:pre_auth_callback+, +:post_auth_callback+,
+  #   +:transaction_notification+
   #
   # @param [Hash] payload the payload is made up of the keyword
   #   arguments passed to the method
@@ -66,7 +68,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @return the API response
   def make_payment(**payload)
     payload = build_payload payload, defaults: %i(
-      currency commerce_type return_url restore_url skin
+      currency commerce_type return_url cancel_url restore_url skin
       pre_auth_callback post_auth_callback transaction_notification
     )
     client.post "sessions/#{inst_id}/payments", build_payload(payload)
@@ -94,8 +96,9 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @api_url https://developer.paypoint.com/payments/docs/#payments/submit_a_payout
   #
   # @applies_defaults
-  #   +:currency+, +:commerce_type+, +:return_url+, +:restore_url+, +:skin+,
-  #   +:pre_auth_callback+, +:post_auth_callback+, +:transaction_notification+
+  #   +:currency+, +:commerce_type+, +:return_url+, +:cancel_url+,
+  #   +:restore_url+, +:skin+, +:pre_auth_callback+, +:post_auth_callback+,
+  #   +:transaction_notification+
   #
   # @param [Hash] payload the payload is made up of the keyword
   #   arguments passed to the method
@@ -103,7 +106,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @return the API response
   def submit_payout(**payload)
     payload = build_payload payload, defaults: %i(
-      currency commerce_type return_url restore_url skin
+      currency commerce_type return_url cancel_url restore_url skin
       pre_auth_callback post_auth_callback transaction_notification
     )
     client.post "sessions/#{inst_id}/payouts", build_payload(payload)
