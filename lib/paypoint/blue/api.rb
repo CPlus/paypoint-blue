@@ -145,7 +145,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   # +amount+ or a +transaction+ hash as a keyword argument.
   #
   # @example Partial refund
-  #   blue.refund_payment(txn_id, amount: '3.49') # assumes currency set as default
+  #   blue.refund_payment(txn_id, amount: '3.49') # assumes a default currency
   #
   # @applies_defaults
   #   only if amount is set: +:currency+, +:commerce_type+
@@ -157,8 +157,12 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   #
   # @return the API response
   def refund_payment(transaction_id, **payload)
-    defaults = %i(pre_auth_callback post_auth_callback transaction_notification expiry_notification)
-    if payload[:amount] || payload[:transaction] && payload[:transaction][:amount]
+    defaults = %i(
+      pre_auth_callback post_auth_callback
+      transaction_notification expiry_notification
+    )
+    if payload[:amount] ||
+        payload[:transaction] && payload[:transaction][:amount]
       defaults += %i(currency commerce_type)
     end
     payload = build_payload(payload, defaults: defaults)

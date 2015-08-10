@@ -1,7 +1,8 @@
 module PayPoint
   module Blue
+    # Miscellaneous helper methods used in multiple places.
     module Utils
-      extend self
+      module_function
 
       def snakecase_and_symbolize_keys(hash)
         case hash

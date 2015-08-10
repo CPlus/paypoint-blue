@@ -8,6 +8,7 @@ module PayPoint
         base.extend ClassMethods
       end
 
+      # Class level methods for PayloadBuilder.
       module ClassMethods
         def shortcuts
           @shortcuts ||= {}
@@ -21,10 +22,12 @@ module PayPoint
         # to commonly used paths.
         #
         # @example Define and use a shortcut
-        #   PayPoint::Blue::Hosted.shortcut :amount, 'transaction.money.amount.fixed'
-        #   blue.make_payment(amount: '3.49', ...)
+        #   class PayPoint::Blue::Hosted
+        #     shortcut :amount, "transaction.money.amount.fixed"
+        #   end
+        #   blue.make_payment(amount: "3.49", ...)
         #     # this will be turned into
-        #     # { transaction: { money: { amount: { fixed: '3.49' } } } }
+        #     # { transaction: { money: { amount: { fixed: "3.49" } } } }
         #
         # @param [Symbol] key the shortcut key
         # @param [String] path a path into the payload with segments
@@ -53,20 +56,7 @@ module PayPoint
       #   that should be applied to this payload
       def build_payload(payload, defaults: [])
         apply_defaults(payload, defaults)
-        payload.keys.each do |key|
-          if path = self.class.shortcut(key)
-            value = payload.delete(key)
-            segments = path.split(".").map(&:to_sym)
-            leaf = segments.pop
-            leaf_parent = segments.reduce(payload) { |h, k| h[k] ||= {} }
-            leaf_parent[leaf] ||= value
-
-            if key =~ /_(?:callback|notification)\Z/
-              leaf_parent[:format] ||= "REST_JSON"
-            end
-          end
-        end
-        payload
+        expand_shortcuts(payload)
       end
 
       private
@@ -83,6 +73,25 @@ module PayPoint
 
       def interpolate_values(value, payload)
         value.gsub(/%(\w+)%/) { |m| payload[Regexp.last_match(1).to_sym] || m }
+      end
+
+      def expand_shortcuts(payload)
+        payload.keys.each do |key|
+          next unless (path = self.class.shortcut(key))
+          expand_shortcut(payload, key, path)
+        end
+        payload
+      end
+
+      def expand_shortcut(payload, key, path)
+        value = payload.delete(key)
+        segments = path.split(".").map(&:to_sym)
+        leaf = segments.pop
+        leaf_parent = segments.reduce(payload) { |a, e| a[e] ||= {} }
+        leaf_parent[leaf] ||= value
+
+        callback_re = /_(?:callback|notification)\Z/
+        leaf_parent[:format] ||= "REST_JSON" if key =~ callback_re
       end
     end
   end

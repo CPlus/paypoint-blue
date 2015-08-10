@@ -16,16 +16,8 @@ module PayPoint
       def on_complete(env)
         outcome = fetch_outcome(env)
         if outcome
-          case outcome[:reason_code]
-          when /^S/ then return
-          when /^V/ then fail Error::Validation, response_values(env)
-          when /^A/ then fail Error::Auth,       response_values(env)
-          when /^C/ then fail Error::Cancelled,  response_values(env)
-          when /^X/ then fail Error::External,   response_values(env)
-          when /^U/ then fail Error::Suspended,  response_values(env)
-          else
-            fail Error::Client, response_values(env)
-          end
+          return if outcome[:reason_code] =~ /^S/
+          fail error_from_outcome(outcome[:reason_code], response_values(env))
         elsif not_found?(env)
           fail Error::NotFound, response_values(env)
         elsif client_error?(env)
@@ -45,6 +37,18 @@ module PayPoint
 
       def fetch_outcome(env)
         env.body.is_a?(Hash) && env.body[:outcome]
+      end
+
+      def error_from_outcome(code, response_values)
+        case code
+        when /^V/ then Error::Validation.new(response_values)
+        when /^A/ then Error::Auth.new(response_values)
+        when /^C/ then Error::Cancelled.new(response_values)
+        when /^X/ then Error::External.new(response_values)
+        when /^U/ then Error::Suspended.new(response_values)
+        else
+          Error::Client.new(response_values)
+        end
       end
 
       def response_values(env)

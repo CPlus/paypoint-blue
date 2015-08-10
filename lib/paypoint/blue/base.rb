@@ -52,23 +52,18 @@ module PayPoint
       # @option options [String] :runscope when used, all traffic will
       #   pass through the provided {https://www.runscope.com/ Runscope}
       #   bucket, including notification callbacks
-      def initialize(endpoint:,
-                     inst_id: ENV["BLUE_API_INSTALLATION"],
-                     api_id: ENV["BLUE_API_ID"],
-                     api_password: ENV["BLUE_API_PASSWORD"],
-                     **options)
+      def initialize(endpoint:, inst_id: ENV["BLUE_API_INSTALLATION"],
+            api_id: ENV["BLUE_API_ID"], api_password: ENV["BLUE_API_PASSWORD"],
+            **options)
 
-        @endpoint = get_endpoint_or_override_with(endpoint)
-
+        @endpoint     = get_endpoint_or_override_with(endpoint)
         @inst_id      = inst_id or fail ArgumentError, "missing inst_id"
         @api_id       = api_id or fail ArgumentError, "missing api_id"
-        @api_password = api_password or fail ArgumentError, "missing api_password"
-
-        options[:url] = @endpoint
-        @options = options
+        @api_password =
+          api_password or fail ArgumentError, "missing api_password"
 
         self.defaults = options.delete(:defaults)
-
+        @options = options.merge url: @endpoint
         @client = build_client
       end
 
@@ -84,7 +79,7 @@ module PayPoint
         options.select { |k, _| Faraday::ConnectionOptions.members.include?(k) }
       end
 
-      def build_client
+      def build_client # rubocop:disable AbcSize, MethodLength
         Faraday.new(client_options) do |f|
           unless options[:raw]
             # This extracts the body and discards all other data from the
@@ -99,15 +94,17 @@ module PayPoint
             f.use PayPoint::Blue::HashKeyConverter
           end
           f.response :json, content_type: /\bjson$/
-          f.response :logger, options[:logger] if options[:logger] || options[:log]
+          if options[:logger] || options[:log]
+            f.response :logger, options[:logger]
+          end
 
           # This sends all API traffic through Runscope, including
           # notifications. It needs to be inserted here before the JSON
           # request middleware so that it is able to transform
           # notification URLs too.
           if options[:runscope]
-            f.use FaradayRunscope, options[:runscope],
-              transform_paths: /\A(callbacks|session)\.\w+(Callback|Notification)\.url\Z/
+            path_re = /\A(callbacks|session)\.\w+(Callback|Notification)\.url\Z/
+            f.use FaradayRunscope, options[:runscope], transform_paths: path_re
           end
 
           f.request :basic_auth, @api_id, @api_password

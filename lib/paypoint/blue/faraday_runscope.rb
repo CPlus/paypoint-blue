@@ -1,3 +1,5 @@
+# Faraday middleware for transforming API endpoint urls and certain urls in JSON
+# payloads to be proxied by Runscope for tracking and debugging purposes.
 class FaradayRunscope < Faraday::Middleware
   CUSTOM_PORT = "Runscope-Request-Port".freeze
 
@@ -8,10 +10,7 @@ class FaradayRunscope < Faraday::Middleware
   end
 
   def call(env)
-    if env.url.port != env.url.default_port
-      env.request_headers[CUSTOM_PORT] = env.url.port.to_s
-      env.url.port = env.url.default_port
-    end
+    handle_custom_port(env)
 
     transform_url env.url
 
@@ -25,6 +24,12 @@ class FaradayRunscope < Faraday::Middleware
   protected
 
   attr_accessor :bucket, :transform_paths
+
+  def handle_custom_port(env)
+    return if env.url.port == env.url.default_port
+    env.request_headers[CUSTOM_PORT] = env.url.port.to_s
+    env.url.port = env.url.default_port
+  end
 
   def transform_url(url)
     if url.respond_to?(:host=)
@@ -65,8 +70,8 @@ class FaradayRunscope < Faraday::Middleware
   end
 
   def transform_path?(path)
-    transform_paths.any? do |path_to_transform|
-      path_to_transform === path
+    transform_paths.any? do |path_pattern|
+      path_pattern.is_a?(Regexp) ? path =~ path_pattern : path == path_pattern
     end
   end
 end

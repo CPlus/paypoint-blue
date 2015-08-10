@@ -13,7 +13,8 @@ module PayPoint
 
         @app.call(env).on_complete do |response_env|
           if response_env.body.is_a?(Enumerable)
-            response_env.body = Utils.snakecase_and_symbolize_keys(response_env.body)
+            response_env.body =
+              Utils.snakecase_and_symbolize_keys(response_env.body)
           end
         end
       end

@@ -32,7 +32,8 @@ class TestPayPointBlueHosted < Minitest::Test
 
     response = @blue.make_payment(**payment_payload)
     assert_equal "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.session_id
-    assert_equal "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.redirect_url
+    assert_equal "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0" \
+                   "/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.redirect_url
     assert_equal "SUCCESS", response.status
   end
 
@@ -49,7 +50,8 @@ class TestPayPointBlueHosted < Minitest::Test
       locale:        "en",
     )
     assert_equal "39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.session_id
-    assert_equal "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.redirect_url
+    assert_equal "https://hosted.mite.paypoint.net/hosted/4d9d53b5-06fc-41bb-91c6-a30e81175ed0" \
+                   "/begin/39b3e3ec-92f4-48c4-aac8-c6c8bc9f6627", response.redirect_url
     assert_equal "SUCCESS", response.status
   end
 
@@ -62,7 +64,8 @@ class TestPayPointBlueHosted < Minitest::Test
 
     response = @blue.submit_authorisation(**payment_payload)
     assert_equal "4e88554a-fb20-4527-a1c1-1a19ebf23c94", response.session_id
-    assert_equal "https://hosted.mite.paypoint.net/hosted/2455020b-928f-4515-88bb-b18f4283adfe/begin/4e88554a-fb20-4527-a1c1-1a19ebf23c94", response.redirect_url
+    assert_equal "https://hosted.mite.paypoint.net/hosted/2455020b-928f-4515-88bb-b18f4283adfe" \
+                   "/begin/4e88554a-fb20-4527-a1c1-1a19ebf23c94", response.redirect_url
     assert_equal "SUCCESS", response.status
   end
 
@@ -73,7 +76,8 @@ class TestPayPointBlueHosted < Minitest::Test
 
     response = @blue.submit_payout(**payment_payload)
     assert_equal "9427d641-54b5-496c-a989-22c284144eb6", response.session_id
-    assert_equal "https://hosted.mite.paypoint.net/hosted/1acebe67-c90d-47b0-b721-45dc015b2479/begin/9427d641-54b5-496c-a989-22c284144eb6", response.redirect_url
+    assert_equal "https://hosted.mite.paypoint.net/hosted/1acebe67-c90d-47b0-b721-45dc015b2479" \
+                   "/begin/9427d641-54b5-496c-a989-22c284144eb6", response.redirect_url
     assert_equal "SUCCESS", response.status
   end
 

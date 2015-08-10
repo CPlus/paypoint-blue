@@ -4,6 +4,7 @@ require "paypoint/blue/hosted"
 require "paypoint/blue/utils"
 
 module PayPoint
+  # Top level module with helper methods.
   module Blue
     # Creates a client for the PayPoint Blue API product
     #

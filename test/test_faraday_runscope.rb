@@ -2,11 +2,15 @@ require "minitest_helper"
 
 class TestFaradayRunscope < Minitest::Test
   def setup
-    @blue = PayPoint::Blue.api_client(endpoint: :test, inst_id: "123", api_id: "ABC", api_password: "secret", runscope: "bucket")
+    @blue = PayPoint::Blue.api_client(
+      endpoint: :test, inst_id: "123",
+      api_id: "ABC", api_password: "secret",
+      runscope: "bucket"
+    )
   end
 
   def test_runscope_integration
-    stub_request(:get, "https://ABC:secret@api-mite-paypoint-net-bucket.runscope.net/acceptor/rest/transactions/ping")
+    stub_request(:get, endpoint("/transactions/ping"))
       .with(headers: { "Runscope-Request-Port" => "2443" })
       .to_return(fixture("ping_runscope"))
     response = @blue.ping
@@ -14,10 +18,11 @@ class TestFaradayRunscope < Minitest::Test
   end
 
   def test_runscope_integration_with_payload
-    stub_request(:post, "https://ABC:secret@api-mite-paypoint-net-bucket.runscope.net/acceptor/rest/transactions/123/payment")
+    transformed_url = "http://with--dash-example-com-bucket.runscope.net/callback/preauth"
+    stub_request(:post, endpoint("/transactions/123/payment"))
       .with(
         headers: { "Runscope-Request-Port" => "2443" },
-        body:    camelcase_and_symbolize_keys(payment_payload(callback_url: "http://with--dash-example-com-bucket.runscope.net/callback/preauth")),
+        body:    camelcase_and_symbolize_keys(payment_payload(callback_url: transformed_url)),
       )
       .to_return(fixture("make_payment_runscope.json"))
     response = @blue.make_payment(**payment_payload)
@@ -29,6 +34,11 @@ class TestFaradayRunscope < Minitest::Test
   end
 
   private
+
+  def endpoint(path)
+    "https://ABC:secret@api-mite-paypoint-net-bucket.runscope.net" \
+      "/acceptor/rest#{path}"
+  end
 
   def payment_payload(callback_url: "http://with-dash.example.com/callback/preauth")
     {
