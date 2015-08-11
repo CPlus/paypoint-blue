@@ -1,3 +1,7 @@
+require "json"
+
+require "hashie/mash"
+
 require "paypoint/blue/version"
 require "paypoint/blue/api"
 require "paypoint/blue/hosted"
