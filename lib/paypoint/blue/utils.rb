@@ -7,7 +7,7 @@ module PayPoint
       def snakecase_and_symbolize_keys(hash)
         case hash
         when Hash
-          hash.each_with_object({},) do |(key, value), snakified|
+          hash.each_with_object({}) do |(key, value), snakified|
             snakified[snakecase(key)] = snakecase_and_symbolize_keys(value)
           end
         when Enumerable
@@ -20,7 +20,7 @@ module PayPoint
       def camelcase_and_symbolize_keys(hash)
         case hash
         when Hash
-          hash.each_with_object({},) do |(key, value), camelized|
+          hash.each_with_object({}) do |(key, value), camelized|
             camelized[camelcase(key)] = camelcase_and_symbolize_keys(value)
           end
         when Enumerable
@@ -29,8 +29,6 @@ module PayPoint
           hash
         end
       end
-
-      private
 
       def snakecase(original)
         string = original.is_a?(Symbol) ? original.to_s : original.dup
