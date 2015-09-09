@@ -183,4 +183,49 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
     )
     client.post "transactions/#{inst_id}/payout", payload
   end
+
+  # Get details of a customer
+  #
+  # @api_url https://developer.paypoint.com/payments/docs/#customers/request_customer_and_cards
+  #
+  # @param [String] customer_id the id of the customer as assigned by PayPoint
+  #
+  # @return the API response
+  def customer(customer_id)
+    client.get "customers/#{inst_id}/#{customer_id}"
+  end
+
+  # Get details of a customer by merchant reference
+  #
+  # @api_url https://developer.paypoint.com/payments/docs/#customers/request_customer_and_cards
+  #
+  # @param [String] customer_ref the merchant reference for the customer
+  #
+  # @return the API response
+  def customer_by_ref(customer_ref)
+    client.get "customers/#{inst_id}/byRef?merchantRef=#{customer_ref}"
+  end
+
+  # Get the list of the registered payment methods of a customer
+  #
+  # @api_url https://developer.paypoint.com/payments/docs/#customers/request_customer_and_cards
+  #
+  # @param [String] customer_id the id of the customer as assigned by PayPoint
+  #
+  # @return the API response
+  def customer_payment_methods(customer_id)
+    client.get "customers/#{inst_id}/#{customer_id}/paymentMethods"
+  end
+
+  # Get a specific registered payment method of a customer
+  #
+  # @api_url https://developer.paypoint.com/payments/docs/#customers/request_customer_and_cards
+  #
+  # @param [String] customer_id the id of the customer as assigned by PayPoint
+  # @param [String] token the token identifying the payment method
+  #
+  # @return the API response
+  def customer_payment_method(customer_id, token)
+    client.get "customers/#{inst_id}/#{customer_id}/paymentMethods/#{token}"
+  end
 end

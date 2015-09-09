@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: rememberMe=deleteMe; Path=/acceptor; Max-Age=0; Expires=Tue, 08-Sep-2015 16:38:05 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Wed, 09 Sep 2015 16:38:04 GMT
+
+{"merchantRef":"bob","id":"198335","displayName":"Bob","billingAddress":{},"link":[{"rel":"self","href":"https://api.mite.paypoint.net:2443/acceptor/rest/customers/5300014/198335"},{"rel":"payment-methods","href":"https://api.mite.paypoint.net:2443/acceptor/rest/customers/5300014/198335/paymentMethods"}]}

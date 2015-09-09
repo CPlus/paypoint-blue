@@ -191,6 +191,55 @@ class TestPayPointBlueAPI < Minitest::Test
     assert_equal "TzHstVJalvw0DXTr5SrW3-Q", response.trace
   end
 
+  def test_get_customer
+    customer_id = "198335"
+    stub_api_get("customers/1234/#{customer_id}")
+      .to_return(fixture("request_customer.json"))
+
+    response = @blue.customer(customer_id)
+    assert_equal "198335", response.id
+    assert_equal "bob",    response.merchant_ref
+    assert_equal "Bob",    response.display_name
+  end
+
+  def test_get_customer_by_ref
+    customer_ref = "bob"
+    stub_api_get("customers/1234/byRef?merchantRef=#{customer_ref}")
+      .to_return(fixture("request_customer_by_ref.json"))
+
+    response = @blue.customer_by_ref(customer_ref)
+    assert_equal "198335", response.id
+    assert_equal "bob",    response.merchant_ref
+    assert_equal "Bob",    response.display_name
+  end
+
+  def test_get_customer_payment_methods
+    customer_id = "198335"
+    stub_api_get("customers/1234/#{customer_id}/paymentMethods")
+      .to_return(fixture("request_customer_payment_methods.json"))
+
+    pm = @blue.customer_payment_methods(customer_id).first
+    assert_equal "MT_qSDipEKHQ9aqSI5pfqxhoQ", pm.card.card_token
+    assert_equal "VISA_CREDIT", pm.card.card_type
+    assert_equal "Bob",         pm.card.card_holder_name
+    assert_equal "CARD",        pm.payment_class
+    assert_equal true,          pm.is_primary
+  end
+
+  def test_get_customer_payment_method
+    customer_id = "198335"
+    token = "MT_qSDipEKHQ9aqSI5pfqxhoQ"
+    stub_api_get("customers/1234/#{customer_id}/paymentMethods/#{token}")
+      .to_return(fixture("request_customer_payment_method.json"))
+
+    pm = @blue.customer_payment_method(customer_id, token)
+    assert_equal "MT_qSDipEKHQ9aqSI5pfqxhoQ", pm.card.card_token
+    assert_equal "VISA_CREDIT", pm.card.card_type
+    assert_equal "Bob",         pm.card.card_holder_name
+    assert_equal "CARD",        pm.payment_class
+    assert_equal true,          pm.is_primary
+  end
+
   private
 
   def payment_payload

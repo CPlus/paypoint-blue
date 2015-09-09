@@ -32,7 +32,11 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
     :cancel_authorisation,
     :transaction,
     :transactions_by_ref,
-    :refund_payment
+    :refund_payment,
+    :customer,
+    :customer_by_ref,
+    :customer_payment_methods,
+    :customer_payment_method
 
   # The Hosted product has only a few endpoints. However, users most
   # likey will want to access the endpoints of the API product as well.
