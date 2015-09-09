@@ -96,6 +96,22 @@ class TestPayPointBlueHosted < Minitest::Test
     assert_nil error.code
   end
 
+  def test_manage_cards
+    stub_hosted_post("sessions/1234/cards")
+      .with(body: cards_request_payload)
+      .to_return(fixture("manage_cards_hosted.json"))
+
+    response = @blue.manage_cards(
+      customer_ref: "bob",
+      return_url:   "http://example.com/callback",
+    )
+
+    assert_equal "aa083d17-e3ef-4b82-ab95-3a4e51decba8", response.session_id
+    assert_equal "https://hosted.mite.paypoint.net/hosted/aa083d17-e3ef-4b82-ab95-3a4e51decba8" \
+                   "/begin/aa083d17-e3ef-4b82-ab95-3a4e51decba8", response.redirect_url
+    assert_equal "SUCCESS", response.status
+  end
+
   private
 
   def payment_payload
@@ -125,5 +141,15 @@ class TestPayPointBlueHosted < Minitest::Test
       }
     end
     camelcase_and_symbolize_keys(with_defaults)
+  end
+
+  def cards_request_payload
+    camelcase_and_symbolize_keys(
+      customer: { identity: { merchant_customer_id: "bob" } },
+      session:  {
+        return_url: { url: "http://example.com/callback" },
+        skin:       "9001",
+      },
+    )
   end
 end

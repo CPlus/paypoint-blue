@@ -111,4 +111,19 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
     )
     client.post "sessions/#{inst_id}/payouts", build_payload(payload)
   end
+
+  # Manage Cards
+  #
+  # @api_url https://developer.paypoint.com/payments/docs/#customers/update_customer_cards
+  #
+  # @applies_defaults +:skin+
+  #
+  # @param [Hash] payload the payload is made up of the keyword
+  #   arguments passed to the method
+  #
+  # @return the API response
+  def manage_cards(**payload)
+    payload = build_payload payload, defaults: %i(skin)
+    client.post "sessions/#{inst_id}/cards", build_payload(payload)
+  end
 end
