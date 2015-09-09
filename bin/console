@@ -112,7 +112,7 @@ def callbacks
 end
 
 def card(type: :mc_debit, valid: true, threeDS: true)
-  {
+  { type: type, valid: valid, threeDS: threeDS }.merge pan: {
     mc_debit: {
       true => {
         true     => "9900000000005159",
