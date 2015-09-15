@@ -67,6 +67,7 @@ def blue_default_options
       currency: 'GBP',
       commerce_type: 'ECOM',
       skin: ENV['BLUE_SKIN'],
+      payment_method_registration: "optional",
       return_url: "#{return_base}/callback/return/%merchant_ref%",
       pre_auth_callback: cb(:preauth_proceed),
       post_auth_callback: cb(:postauth_proceed),
