@@ -7,27 +7,27 @@ require "webmock/minitest"
 include PayPoint::Blue::Utils
 
 def api_endpoint
-  "https://ABC:secret@api.mite.paypoint.net:2443/acceptor/rest/"
+  "https://api.mite.paypoint.net:2443/acceptor/rest/"
 end
 
 def hosted_endpoint
-  "https://ABC:secret@hosted.mite.paypoint.net/hosted/rest/"
+  "https://hosted.mite.paypoint.net/hosted/rest/"
 end
 
 def stub_api_get(path)
-  stub_request(:get, api_endpoint + path)
+  stub_request(:get, api_endpoint + path).with(basic_auth: %w(ABC secret))
 end
 
 def stub_hosted_get(path)
-  stub_request(:get, hosted_endpoint + path)
+  stub_request(:get, hosted_endpoint + path).with(basic_auth: %w(ABC secret))
 end
 
 def stub_api_post(path)
-  stub_request(:post, api_endpoint + path)
+  stub_request(:post, api_endpoint + path).with(basic_auth: %w(ABC secret))
 end
 
 def stub_hosted_post(path)
-  stub_request(:post, hosted_endpoint + path)
+  stub_request(:post, hosted_endpoint + path).with(basic_auth: %w(ABC secret))
 end
 
 def fixture(file)

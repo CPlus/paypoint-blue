@@ -11,7 +11,10 @@ class TestFaradayRunscope < Minitest::Test
 
   def test_runscope_integration
     stub_request(:get, endpoint("/transactions/ping"))
-      .with(headers: { "Runscope-Request-Port" => "2443" })
+      .with(
+        headers: { "Runscope-Request-Port" => "2443" },
+        basic_auth: %w(ABC secret),
+      )
       .to_return(fixture("ping_runscope"))
     response = @blue.ping
     assert_equal true, response
@@ -23,6 +26,7 @@ class TestFaradayRunscope < Minitest::Test
       .with(
         headers: { "Runscope-Request-Port" => "2443" },
         body:    camelcase_and_symbolize_keys(payment_payload(callback_url: transformed_url)),
+        basic_auth: %w(ABC secret),
       )
       .to_return(fixture("make_payment_runscope.json"))
     response = @blue.make_payment(**payment_payload)
@@ -36,8 +40,7 @@ class TestFaradayRunscope < Minitest::Test
   private
 
   def endpoint(path)
-    "https://ABC:secret@api-mite-paypoint-net-bucket.runscope.net" \
-      "/acceptor/rest#{path}"
+    "https://api-mite-paypoint-net-bucket.runscope.net/acceptor/rest#{path}"
   end
 
   def payment_payload(callback_url: "http://with-dash.example.com/callback/preauth")
