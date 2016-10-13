@@ -138,7 +138,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @api_url https://paymentdeveloperdocs.com/customise-_look_and_feel/manage-hosted-cashier-skins/
   #
   # @return the API response
-  def retrieve_skin_list
+  def skins
     client.get "skins/#{inst_id}/list"
   end
 
@@ -147,11 +147,12 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @api_url https://paymentdeveloperdocs.com/customise-_look_and_feel/manage-hosted-cashier-skins/
   #
   # @param [String] skin_id the id of the skin
+  # @param [String] path the path to download the skin (optional)
   #
   # @return a zip file
-  def download_skin(skin_id)
+  def download_skin(skin_id, path = ".")
     response = client.get "skins/#{skin_id}"
-    File.open("#{skin_id}.zip", "wb") do |file|
+    File.open("#{File.expand_path(path)}/#{skin_id}.zip", "wb") do |file|
       file.write(Base64.decode64(response))
     end
   end
@@ -166,9 +167,9 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   #   description:  description for the skin (optional)
   #
   # @return the API response
-  def upload_skin(file, params)
+  def upload_skin(file, name:, **params)
     client.post do |request|
-      request.url "skins/#{inst_id}/create", params
+      request.url "skins/#{inst_id}/create", params.merge(name: name)
       request.headers["Content-Type"] = "application/zip"
       request.body = File.read(file)
     end
@@ -176,9 +177,9 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
 
   # Replace a skin
   #
-  # Updating a skin with name and description
-  # Updating a skin file only
-  # Updating a skin name and description only
+  # Update the skin by uploading a new zip file.
+  # The method may also be used to update only the name and description of
+  # an existing skin.
   #
   # @api_url https://paymentdeveloperdocs.com/customise-_look_and_feel/manage-hosted-cashier-skins/
   #
@@ -189,13 +190,10 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   #   description:  description for the skin (optional)
   #
   # @return the API response
-  def replace_skin(skin_id, **arguments)
-    file = arguments[:file] || ""
-    params = arguments.reject { |k, _| k == :file }
-
+  def replace_skin(skin_id, file: nil, **params)
     client.put do |request|
       request.url "skins/#{skin_id}", params
-      unless file.empty?
+      if file
         request.headers["Content-Type"] = "application/zip"
         request.body = File.read(file)
       end
