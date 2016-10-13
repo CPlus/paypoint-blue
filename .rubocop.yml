@@ -38,7 +38,7 @@ Style/StringLiteralsInInterpolation:
 Style/SymbolArray:
   Enabled: false
 
-Style/TrailingComma:
+Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: comma
 
 Style/ClassAndModuleChildren:
