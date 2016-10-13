@@ -150,7 +150,8 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   # @param [String] path the path to download the skin (optional)
   #
   # @return a zip file
-  def download_skin(skin_id, path = ".")
+  def download_skin(skin_id, path = nil)
+    path ||= "."
     response = client.get "skins/#{skin_id}"
     File.open("#{File.expand_path(path)}/#{skin_id}.zip", "wb") do |file|
       file.write(Base64.decode64(response))
