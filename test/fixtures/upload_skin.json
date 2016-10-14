@@ -1,0 +1,8 @@
+HTTP/1.1 201 Created
+Server: Apache-Coyote/1.1
+Set-Cookie: rememberMe=deleteMe; Path=/hosted; Max-Age=0; Expires=Thu, 13-Oct-2016 09:11:14 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Fri, 14 Oct 2016 09:11:15 GMT
+
+{"status":"SUCCESS","code":"S100","message":"Skin uploaded","skin":{"id":2,"name":"Test skin","organisation":"Collect Plus"}}

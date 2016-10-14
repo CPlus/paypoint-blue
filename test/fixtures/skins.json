@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: rememberMe=deleteMe; Path=/hosted; Max-Age=0; Expires=Wed, 12-Oct-2016 16:48:12 GMT
+Content-Type: application/json;charset=UTF-8
+Transfer-Encoding: chunked
+Date: Thu, 13 Oct 2016 16:48:13 GMT
+
+{"status":"SUCCESS","code":"S100","message":"Skins retrieved","skins":[{"id":1,"name":"Pay360 Blue","organisation":"Pay360"},{"id":2,"name":"Pay360 version 2","organisation":"Pay360"}]}
