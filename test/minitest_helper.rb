@@ -15,19 +15,27 @@ def hosted_endpoint
 end
 
 def stub_api_get(path)
-  stub_request(:get, api_endpoint + path).with(basic_auth: %w(ABC secret))
+  call_stub_request(:get, api_endpoint + path)
 end
 
 def stub_hosted_get(path)
-  stub_request(:get, hosted_endpoint + path).with(basic_auth: %w(ABC secret))
+  call_stub_request(:get, hosted_endpoint + path)
 end
 
 def stub_api_post(path)
-  stub_request(:post, api_endpoint + path).with(basic_auth: %w(ABC secret))
+  call_stub_request(:post, api_endpoint + path)
 end
 
 def stub_hosted_post(path)
-  stub_request(:post, hosted_endpoint + path).with(basic_auth: %w(ABC secret))
+  call_stub_request(:post, hosted_endpoint + path)
+end
+
+def stub_hosted_put(path)
+  call_stub_request(:put, hosted_endpoint + path)
+end
+
+def call_stub_request(method, url)
+  stub_request(method, url).with(basic_auth: %w(ABC secret))
 end
 
 def fixture(file)
