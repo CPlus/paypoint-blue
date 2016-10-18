@@ -112,6 +112,89 @@ class TestPayPointBlueHosted < Minitest::Test
     assert_equal "SUCCESS", response.status
   end
 
+  def test_skins
+    stub_hosted_get("skins/1234/list").to_return(fixture("skins.json"))
+
+    response = @blue.skins
+
+    assert_equal 1, response.skins[0].id
+    assert_equal "Pay360 Blue", response.skins[0].name
+    assert_equal "Pay360", response.skins[0].organisation
+    assert_equal "SUCCESS", response.status
+  end
+
+  def test_download_skin
+    stub_hosted_get("skins/1234").to_return(fixture("download_skin"))
+
+    response = @blue.download_skin(1234)
+
+    assert_equal 150, response
+  end
+
+  def test_download_skin_with_wrong_id
+    stub_hosted_get("skins/1234")
+      .to_return(fixture("download_skin_with_wrong_id"))
+
+    error = assert_raises(PayPoint::Blue::Error::Client) do
+      @blue.download_skin(1234)
+    end
+
+    assert_equal "the server responded with status 500", error.message
+    assert_nil error.code
+  end
+
+  def test_upload_skin
+    stub_hosted_post("skins/1234/create?name=Test%20skin")
+      .with(body: File.read(fixture("test_skin.zip")))
+      .to_return(fixture("upload_skin.json"))
+
+    response = @blue.upload_skin(fixture("test_skin.zip"), name: "Test skin")
+
+    assert_equal 2, response.skin.id
+    assert_equal "Test skin", response.skin.name
+    assert_equal "Collect Plus", response.skin.organisation
+    assert_equal "SUCCESS", response.status
+  end
+
+  def test_replace_skin
+    stub_hosted_put("skins/1234?name=Test%20skin2")
+      .with(body: File.read(fixture("test_skin.zip")))
+      .to_return(fixture("replace_skin.json"))
+
+    response = @blue.replace_skin(1234, file: fixture("test_skin.zip"),
+      name: "Test skin2")
+
+    assert_equal 1234, response.skin.id
+    assert_equal "Test skin2", response.skin.name
+    assert_equal "Collect Plus", response.skin.organisation
+    assert_equal "SUCCESS", response.status
+  end
+
+  def test_replace_skin_without_name
+    stub_hosted_put("skins/1234")
+      .with(body: File.read(fixture("test_skin.zip")))
+      .to_return(fixture("replace_skin.json"))
+
+    response = @blue.replace_skin(1234, file: fixture("test_skin.zip"))
+
+    assert_equal 1234, response.skin.id
+    assert_equal "Test skin2", response.skin.name
+    assert_equal "Collect Plus", response.skin.organisation
+    assert_equal "SUCCESS", response.status
+  end
+
+  def test_replace_skin_without_file
+    stub_hosted_put("skins/1234?name=Test%20skin2")
+      .to_return(fixture("replace_skin.json"))
+
+    response = @blue.replace_skin(1234, name: "Test skin2")
+
+    assert_equal 1234, response.skin.id
+    assert_equal "Test skin2", response.skin.name
+    assert_equal "Collect Plus", response.skin.organisation
+    assert_equal "SUCCESS", response.status
+  end
+
   private
 
   def payment_payload

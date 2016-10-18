@@ -1,0 +1,44 @@
+HTTP/1.1 500 Internal Server Error
+Server: Apache-Coyote/1.1
+Content-Type: text/html;charset=ISO-8859-1
+Date: Fri, 14 Oct 2016 08:46:45 GMT
+Transfer-Encoding: chunked
+Connection: close
+Set-Cookie: rememberMe=deleteMe; Path=/hosted; Max-Age=0; Expires=Thu, 13-Oct-2016 08:46:46 GMT
+Set-Cookie: JSESSIONID=Zc6XpwoxstIOuVZoz342XgUy; Path=/hosted
+X-Powered-By: JSP/2.2
+
+
+
+<html>
+<head>
+    <title>
+        An error occurred with your request.
+    </title>
+    <style>
+        body {
+            background-color: white;
+            font-family: sans-serif;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div id="message">
+    <img src="/hosted/errorPages/logo.png">
+    <h1>Server error</h1>
+
+    <p>An error occurred</p>
+    <p>while processing your request</p>
+    <p>please try again soon</p>
+
+
+    <p style="margin-top: 150px;">
+        Please visit our main <a href="http://www.paypoint.net/">website</a> for technical contact details.
+        </p>
+
+
+
+</body>
+</html>

@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Set-Cookie: rememberMe=deleteMe; Path=/hosted; Max-Age=0; Expires=Wed, 12-Oct-2016 17:23:32 GMT
+Content-Disposition: form-data; name="attachment"; filename="1.zip"
+Content-Type: application/zip
+Content-Length: 47613
+Date: Thu, 13 Oct 2016 17:23:31 GMT
+
+UEsDBAoAAAAAAGpYTknGNbk7BQAAAAUAAAAWAAAAdGVzdC9maXh0dXJlcy90\nZXN0LnR4dHRlc3QKUEsBAh4DCgAAAAAAalhOScY1uTsFAAAABQAAABYAAAAA\nAAAAAQAAAKSBAAAAAHRlc3QvZml4dHVyZXMvdGVzdC50eHRQSwUGAAAAAAEA\nAQBEAAAAOQAAAAAA\n
