@@ -1,5 +1,5 @@
 module PayPoint
-  module Blue # rubocop:disable Documentation
-    VERSION = "0.7.0"
+  module Blue
+    VERSION = "0.7.0".freeze
   end
 end

@@ -5,6 +5,7 @@ AllCops:
     - "bin/*"
     - "support/**/*"
     - "vendor/**/*"
+  TargetRubyVersion: 2.2
 
 ### Style ######################################################################
 
@@ -24,8 +25,14 @@ Style/BlockDelimiters:
 Style/IndentHash:
   EnforcedStyle: consistent
 
+Style/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
 Style/MultilineOperationIndentation:
   EnforcedStyle: indented
+
+Style/SignalException:
+  EnforcedStyle: semantic
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
@@ -37,6 +44,9 @@ Style/StringLiteralsInInterpolation:
 # proper syntax highlighting support for differentiating between them.
 Style/SymbolArray:
   Enabled: false
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
 
 Style/TrailingCommaInLiteral:
   EnforcedStyleForMultiline: comma

@@ -161,8 +161,8 @@ class TestPayPointBlueHosted < Minitest::Test
       .with(body: File.read(fixture("test_skin.zip")))
       .to_return(fixture("replace_skin.json"))
 
-    response = @blue.replace_skin(1234, file: fixture("test_skin.zip"),
-      name: "Test skin2")
+    response = @blue.replace_skin 1234,
+      file: fixture("test_skin.zip"), name: "Test skin2"
 
     assert_equal 1234, response.skin.id
     assert_equal "Test skin2", response.skin.name

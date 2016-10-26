@@ -53,8 +53,8 @@ module PayPoint
       #   pass through the provided {https://www.runscope.com/ Runscope}
       #   bucket, including notification callbacks
       def initialize(endpoint:, inst_id: ENV["BLUE_API_INSTALLATION"],
-            api_id: ENV["BLUE_API_ID"], api_password: ENV["BLUE_API_PASSWORD"],
-            **options)
+        api_id: ENV["BLUE_API_ID"], api_password: ENV["BLUE_API_PASSWORD"],
+        **options)
 
         @endpoint     = get_endpoint_or_override_with(endpoint)
         @inst_id      = inst_id or fail ArgumentError, "missing inst_id"

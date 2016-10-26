@@ -12,7 +12,7 @@ class TestFaradayRunscope < Minitest::Test
   def test_runscope_integration
     stub_request(:get, endpoint("/transactions/ping"))
       .with(
-        headers: { "Runscope-Request-Port" => "2443" },
+        headers:    { "Runscope-Request-Port" => "2443" },
         basic_auth: %w(ABC secret),
       )
       .to_return(fixture("ping_runscope"))
@@ -24,8 +24,8 @@ class TestFaradayRunscope < Minitest::Test
     transformed_url = "http://with--dash-example-com-bucket.runscope.net/callback/preauth"
     stub_request(:post, endpoint("/transactions/123/payment"))
       .with(
-        headers: { "Runscope-Request-Port" => "2443" },
-        body:    camelcase_and_symbolize_keys(payment_payload(callback_url: transformed_url)),
+        headers:    { "Runscope-Request-Port" => "2443" },
+        body:       camelcase_and_symbolize_keys(payment_payload(callback_url: transformed_url)),
         basic_auth: %w(ABC secret),
       )
       .to_return(fixture("make_payment_runscope.json"))
