@@ -5,8 +5,8 @@ require "paypoint/blue/base"
 # Client class for the Hosted product.
 class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   ENDPOINTS = {
-    test: "https://hosted.mite.paypoint.net/hosted/rest",
-    live: "https://hosted.paypoint.net/hosted/rest",
+    test: "https://api.mite.pay360.com/hosted/rest",
+    live: "https://api.pay360.com/hosted/rest",
   }.freeze
 
   shortcut :merchant_ref,  "transaction.merchant_reference"

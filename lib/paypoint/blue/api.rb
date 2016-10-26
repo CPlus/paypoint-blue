@@ -3,8 +3,8 @@ require "paypoint/blue/base"
 # Client class for the API product.
 class PayPoint::Blue::API < PayPoint::Blue::Base
   ENDPOINTS = {
-    test: "https://api.mite.paypoint.net:2443/acceptor/rest",
-    live: "https://api.paypoint.net/acceptor/rest",
+    test: "https://api.mite.pay360.com:2443/acceptor/rest",
+    live: "https://api.pay360.com/acceptor/rest",
   }.freeze
 
   shortcut :merchant_ref,  "transaction.merchant_ref"
