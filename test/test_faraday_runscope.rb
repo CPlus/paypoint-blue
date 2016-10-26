@@ -40,7 +40,7 @@ class TestFaradayRunscope < Minitest::Test
   private
 
   def endpoint(path)
-    "https://api-mite-paypoint-net-bucket.runscope.net/acceptor/rest#{path}"
+    "https://api-mite-pay360-com-bucket.runscope.net/acceptor/rest#{path}"
   end
 
   def payment_payload(callback_url: "http://with-dash.example.com/callback/preauth")
