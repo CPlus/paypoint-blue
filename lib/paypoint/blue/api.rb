@@ -3,7 +3,7 @@ require "paypoint/blue/base"
 # Client class for the API product.
 class PayPoint::Blue::API < PayPoint::Blue::Base
   ENDPOINTS = {
-    test: "https://api.mite.pay360.com:2443/acceptor/rest",
+    test: "https://api.mite.pay360.com/acceptor/rest",
     live: "https://api.pay360.com/acceptor/rest",
   }.freeze
 

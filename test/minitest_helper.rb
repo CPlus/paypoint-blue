@@ -7,7 +7,7 @@ require "webmock/minitest"
 include PayPoint::Blue::Utils
 
 def api_endpoint
-  "https://api.mite.pay360.com:2443/acceptor/rest/"
+  "https://api.mite.pay360.com/acceptor/rest/"
 end
 
 def hosted_endpoint
