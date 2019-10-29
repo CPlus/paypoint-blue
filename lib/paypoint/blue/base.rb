@@ -52,6 +52,9 @@ module PayPoint
       # @option options [String] :runscope when used, all traffic will
       #   pass through the provided {https://www.runscope.com/ Runscope}
       #   bucket, including notification callbacks
+      # @option options [Integer] :timeout waiting for response in seconds
+      # @option options [Integer] :open_timeout waiting for opening a connection
+      #   in seconds
       def initialize(endpoint:, inst_id: ENV["BLUE_API_INSTALLATION"],
         api_id: ENV["BLUE_API_ID"], api_password: ENV["BLUE_API_PASSWORD"],
         **options)
@@ -63,7 +66,7 @@ module PayPoint
           api_password or fail ArgumentError, "missing api_password"
 
         self.defaults = options.delete(:defaults)
-        @options = options.merge url: @endpoint
+        @options = options.merge(url: @endpoint, **request_timeouts(options))
         @client = build_client
       end
 
@@ -73,6 +76,15 @@ module PayPoint
 
       def get_endpoint_or_override_with(endpoint)
         self.class.const_get("ENDPOINTS").fetch(endpoint, endpoint.to_s)
+      end
+
+      def request_timeouts(timeout_options)
+        {
+          request: {
+            open_timeout: timeout_options[:open_timeout] || 2,
+            timeout:      timeout_options[:timeout]      || 5,
+          }
+        }
       end
 
       def client_options
