@@ -47,7 +47,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   def make_payment(**payload)
     payload = build_payload payload, defaults: %i(
       currency commerce_type pre_auth_callback post_auth_callback
-      transaction_notification expiry_notification
+      transaction_notification expiry_notification customer_registration
     )
     client.post "transactions/#{inst_id}/payment", payload
   end
