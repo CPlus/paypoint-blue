@@ -14,6 +14,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   shortcut :description,   "transaction.description"
   shortcut :customer_ref,  "customer.merchant_ref"
   shortcut :customer_name, "customer.display_name"
+  shortcut :customer_registration, "customer.registered"
 
   shortcut :pre_auth_callback,        "callbacks.pre_auth_callback.url"
   shortcut :post_auth_callback,       "callbacks.post_auth_callback.url"
@@ -46,7 +47,7 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   def make_payment(**payload)
     payload = build_payload payload, defaults: %i(
       currency commerce_type pre_auth_callback post_auth_callback
-      transaction_notification expiry_notification
+      transaction_notification expiry_notification customer_registration
     )
     client.post "transactions/#{inst_id}/payment", payload
   end

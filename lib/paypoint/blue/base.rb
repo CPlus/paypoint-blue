@@ -107,7 +107,7 @@ module PayPoint
           end
           f.response :json, content_type: /\bjson$/
           if options[:logger] || options[:log]
-            f.response :logger, options[:logger]
+            f.response :logger, options[:logger], { headers: true, bodies: true }
           end
 
           # This sends all API traffic through Runscope, including
