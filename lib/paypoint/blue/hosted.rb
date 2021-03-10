@@ -75,7 +75,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   def make_payment(**payload)
     payload = build_payload payload, defaults: %i(
       currency commerce_type return_url cancel_url restore_url skin
-      payment_method_registration pre_auth_callback post_auth_callback
+      pre_auth_callback post_auth_callback
       transaction_notification customer_registration
     )
     client.post "sessions/#{inst_id}/payments", build_payload(payload)
