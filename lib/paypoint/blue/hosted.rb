@@ -65,7 +65,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   #
   # @applies_defaults
   #   +:currency+, +:commerce_type+, +:return_url+, +:cancel_url+,
-  #   +:restore_url+, +:skin+, +:payment_method_registration+,
+  #   +:restore_url+, +:skin+,
   #   +:pre_auth_callback+, +:post_auth_callback+, +:transaction_notification+
   #
   # @param [Hash] payload the payload is made up of the keyword
