@@ -21,6 +21,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
   shortcut :restore_url,   "session.restore_url.url"
   shortcut :skin,          "session.skin"
   shortcut :payment_method_registration, "features.payment_method_registration"
+  shortcut :customer_registration, "customer.registered"
 
   shortcut :pre_auth_callback,        "session.pre_auth_callback.url"
   shortcut :post_auth_callback,       "session.post_auth_callback.url"
@@ -75,7 +76,7 @@ class PayPoint::Blue::Hosted < PayPoint::Blue::Base
     payload = build_payload payload, defaults: %i(
       currency commerce_type return_url cancel_url restore_url skin
       payment_method_registration pre_auth_callback post_auth_callback
-      transaction_notification
+      transaction_notification customer_registration
     )
     client.post "sessions/#{inst_id}/payments", build_payload(payload)
   end
