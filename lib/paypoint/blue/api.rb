@@ -229,4 +229,9 @@ class PayPoint::Blue::API < PayPoint::Blue::Base
   def customer_payment_method(customer_id, token)
     client.get "customers/#{inst_id}/#{customer_id}/paymentMethods/#{token}"
   end
+
+  # Remove card
+  def remove_card(customer_id, token)
+    client.post "customers/#{inst_id}/#{customer_id}/paymentMethod/#{token}/remove"
+  end
 end
