@@ -15,7 +15,8 @@ class TestPayPointBlueHosted < Minitest::Test
   end
 
   def test_delegates_api_methods_to_regular_client
-    PayPoint::Blue::API.instance_methods(false).each do |api_method|
+    methods = PayPoint::Blue::API.instance_methods(false) - [:remove_card]
+    methods.each do |api_method|
       assert_respond_to @blue, api_method
     end
   end
